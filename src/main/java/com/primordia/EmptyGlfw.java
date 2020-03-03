@@ -18,7 +18,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  * https://www.glfw.org/
  *
  */
-public class BasicGlfw
+public class EmptyGlfw
 {
     public static void main( String[] args )
     {

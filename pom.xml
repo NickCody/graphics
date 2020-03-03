@@ -176,6 +176,11 @@
 			<classifier>natives-${platform}</classifier>
 		</dependency>
 
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.3</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -237,7 +242,7 @@
 
 		<resources>
 			<resource>
-				<directory>res</directory>
+				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
 
@@ -263,6 +268,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+
 	</build>
 
 	<repositories>
