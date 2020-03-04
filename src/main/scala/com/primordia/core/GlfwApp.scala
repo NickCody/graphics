@@ -1,14 +1,13 @@
-package com.primordia.util
+package com.primordia.core
 
-import ch.qos.logback.classic.{Logger, LoggerContext}
-import ch.qos.logback.core.util.StatusPrinter
+import com.primordia.model.GlfwAppContext
 import org.lwjgl.glfw.GLFW._
+import org.lwjgl.opengl.GL.setCapabilities
 import org.lwjgl.opengl.GL11.{GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, glClear, glClearColor}
 import org.slf4j.LoggerFactory
 
 trait GlfwApp {
   val appContext: GlfwAppContext
-  val windowParams: WindowParams
 
   private val log = LoggerFactory.getLogger(this.getClass)
 
@@ -28,9 +27,16 @@ trait GlfwApp {
 
     onInit()
 
+    glfwShowWindow(appContext.window)
+
     while ( !glfwWindowShouldClose(appContext.window) ) {
-      glClearColor(windowParams.backgroundColor.r, windowParams.backgroundColor.g, windowParams.backgroundColor.b, 1.0f)
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+      setCapabilities(appContext.glCaps)
+      glClearColor(
+        appContext.windowParams.backgroundColor.r,
+        appContext.windowParams.backgroundColor.g,
+        appContext.windowParams.backgroundColor.b,
+        appContext.windowParams.backgroundColor.a)
+      glClear(GL_COLOR_BUFFER_BIT)
 
       onRender()
 
