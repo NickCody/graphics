@@ -15,13 +15,17 @@ object GlfwAppFactory {
 
   def createAppContext(wParams: WindowParams = WindowParams()): GlfwAppContext = {
 
-    if (!glfwInit) throw new IllegalStateException("Unable to initialize GLFW")
+    if (!glfwInit)
+      throw new IllegalStateException("Unable to initialize GLFW")
 
     glfwDefaultWindowHints()
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE)
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE)
 
     val window = glfwCreateWindow(wParams.width, wParams.height, wParams.title, NULL, NULL)
+
+    if (window == NULL)
+      throw new IllegalStateException("Failed to create the GLFW window")
 
     WindowIconLoader.setIcons(window, wParams.icons.toArray)
 
