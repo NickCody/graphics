@@ -1,10 +1,14 @@
 package com.primordia.core
 
+import java.nio.IntBuffer
+
 import com.primordia.model.GlfwAppContext
 import org.lwjgl.glfw.GLFW._
-import org.lwjgl.glfw.GLFWFramebufferSizeCallback
+import org.lwjgl.glfw.{GLFWFramebufferSizeCallback, GLFWVidMode}
 import org.lwjgl.opengl.GL.setCapabilities
 import org.lwjgl.opengl.GL11.{GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST, glClear, glClearColor, glEnable, glViewport}
+import org.lwjgl.system.MemoryStack
+import org.lwjgl.system.MemoryUtil.memAddress
 import org.slf4j.LoggerFactory
 
 trait GlfwApp {
@@ -46,6 +50,23 @@ trait GlfwApp {
       appContext.windowParams.backgroundColor.b,
       appContext.windowParams.backgroundColor.a)
     glEnable(GL_DEPTH_TEST)
+
+    // Center App Window
+    val vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor)
+    glfwSetWindowPos(
+      appContext.window, (vidmode.width - appContext.windowParams.width) / 2, (vidmode.height - appContext.windowParams.height) / 2)
+    try {
+      val frame = MemoryStack.stackPush
+      try {
+        val framebufferSize = frame.mallocInt(2)
+        nglfwGetFramebufferSize(appContext.window, memAddress(framebufferSize), memAddress(framebufferSize) + 4)
+        windowWidth = framebufferSize.get(0)
+        windowHeight = framebufferSize.get(1)
+      } finally if (frame != null) frame.close()
+    }
+
+    // Enable v-sync
+    glfwSwapInterval(1)
 
     glfwShowWindow(appContext.window)
 
