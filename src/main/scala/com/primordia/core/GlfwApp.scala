@@ -63,6 +63,8 @@ trait GlfwApp {
         windowWidth = framebufferSize.get(0)
         windowHeight = framebufferSize.get(1)
       } finally if (frame != null) frame.close()
+    } catch {
+      case e: Exception => e.printStackTrace()
     }
 
     // Enable v-sync

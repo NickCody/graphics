@@ -120,6 +120,10 @@
 			</activation>
 			<properties>
 				<platform>macos</platform>
+				<lwjgl.version>3.2.3</lwjgl.version>
+				<lwjgl.natives>natives-macos</lwjgl.natives>
+				<swt.version>4.3</swt.version>
+                <joml.version>1.9.21</joml.version>
 			</properties>
 			<dependencies>
 				<dependency>
