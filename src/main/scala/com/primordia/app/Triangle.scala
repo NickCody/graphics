@@ -19,15 +19,17 @@ object Triangle {
 }
 
 class Triangle(val appContext: GlfwAppContext) extends GlfwApp {
-  val vbo = glGenBuffers
-  val ibo = glGenBuffers
-  val vertices = Array(-0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f)
-  val indices = Array(0, 1, 2)
+  private val vbo = glGenBuffers
+  private val ibo = glGenBuffers
+  private val vertices = Array(-0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f)
+  private val indices = Array(0, 1, 2)
+
   glBindBuffer(GL_ARRAY_BUFFER, vbo)
-  glBufferData(GL_ARRAY_BUFFER, BufferUtils.createFloatBuffer(vertices.length).put(vertices).flip.asInstanceOf[FloatBuffer], GL_STATIC_DRAW)
+  glBufferData(GL_ARRAY_BUFFER, BufferUtils.createFloatBuffer(vertices.length).put(vertices).flip, GL_STATIC_DRAW)
   glEnableClientState(GL_VERTEX_ARRAY)
+
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo)
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, BufferUtils.createIntBuffer(indices.length).put(indices).flip.asInstanceOf[IntBuffer], GL_STATIC_DRAW)
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, BufferUtils.createIntBuffer(indices.length).put(indices).flip, GL_STATIC_DRAW)
   glVertexPointer(2, GL_FLOAT, 0, 0L)
 
   override def onRender(): Unit = {
