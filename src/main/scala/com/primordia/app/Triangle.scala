@@ -5,7 +5,8 @@ import java.nio.{FloatBuffer, IntBuffer}
 import com.primordia.core.{GlfwApp, GlfwAppFactory}
 import com.primordia.model.{Color, GlfwAppContext, WindowParams}
 import org.lwjgl.BufferUtils
-import org.lwjgl.opengl.GL11.{GL_FLOAT, GL_PROJECTION, GL_TRIANGLES, GL_UNSIGNED_INT, GL_VERTEX_ARRAY, glDrawElements, glEnableClientState, glLoadIdentity, glMatrixMode, glOrtho, glVertexPointer}
+import org.lwjgl.glfw.GLFW.glfwSwapBuffers
+import org.lwjgl.opengl.GL11.{GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, GL_FLOAT, GL_PROJECTION, GL_TRIANGLES, GL_UNSIGNED_INT, GL_VERTEX_ARRAY, glClear, glDrawElements, glEnableClientState, glLoadIdentity, glMatrixMode, glOrtho, glVertexPointer}
 import org.lwjgl.opengl.GL15.{GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, glBindBuffer, glBufferData, glGenBuffers}
 
 object Triangle {
@@ -30,11 +31,16 @@ class Triangle(val appContext: GlfwAppContext) extends GlfwApp {
   glVertexPointer(2, GL_FLOAT, 0, 0L)
 
   override def onRender(): Unit = {
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
     glMatrixMode(GL_PROJECTION)
     val aspect = windowWidth.toFloat / windowHeight.toFloat
     glLoadIdentity()
     glOrtho(-aspect, aspect, -1, 1, -1, 1)
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0L)
+
+    glfwSwapBuffers(appContext.window)
   }
 
   override def onInit(): Unit = {

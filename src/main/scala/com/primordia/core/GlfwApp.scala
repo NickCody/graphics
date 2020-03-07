@@ -23,6 +23,8 @@ trait GlfwApp {
       if (width > 0 && height > 0 && (windowWidth != width || windowHeight != height)) {
         windowWidth = width
         windowHeight = height
+        glViewport(0, 0, windowWidth, windowHeight)
+        onRender()
       }
     }
   }
@@ -75,12 +77,9 @@ trait GlfwApp {
     while ( !glfwWindowShouldClose(appContext.window) ) {
 
       glfwPollEvents()
-      glViewport(0, 0, windowWidth, windowHeight)
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
       onRender()
 
-      glfwSwapBuffers(appContext.window)
     }
 
     onExit()
