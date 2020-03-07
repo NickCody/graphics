@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Triangle (Mac)" type="Application" factoryName="Application" singleton="false">
+    <option name="MAIN_CLASS_NAME" value="com.primordia.app.Triangle" />
+    <module name="graphics" />
+    <option name="VM_PARAMETERS" value="-XstartOnFirstThread -Xdock:name=&quot;Triangle&quot; -Xdock:icon=&quot;src/main/resources/Green32x32.png&quot;" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.primordia.app.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
