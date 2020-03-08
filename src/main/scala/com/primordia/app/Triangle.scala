@@ -2,8 +2,8 @@ package com.primordia.app
 
 import java.nio.{FloatBuffer, IntBuffer}
 
-import com.primordia.core.{GlfwApp, GlfwAppFactory}
-import com.primordia.model.{Color, GlfwAppContext, WindowParams}
+import com.primordia.core.{App, AppFactory}
+import com.primordia.model.{AppContext, Color, WindowParams}
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFW.glfwSwapBuffers
 import org.lwjgl.opengl.GL11.{GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, GL_FLOAT, GL_PROJECTION, GL_TRIANGLES, GL_UNSIGNED_INT, GL_VERTEX_ARRAY, glClear, glDrawElements, glEnableClientState, glLoadIdentity, glMatrixMode, glOrtho, glVertexPointer}
@@ -12,13 +12,16 @@ import org.lwjgl.opengl.GL15.{GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER, GL_STATI
 object Triangle {
   def main(args: Array[String]): Unit = {
     new Triangle(
-      GlfwAppFactory.createAppContext(
-        WindowParams("Triangle", 1920, 1080, Color.AquaMarine, List("Green32x32.png", "Green64x64.png")))
-    ).run()
+      AppFactory.createAppContext(
+        new WindowParams("Triangle", 1920, 1080, Color.AquaMarine, List("Green32x32.png", "Green64x64.png").toArray)
+      )).run()
   }
 }
 
-class Triangle(val appContext: GlfwAppContext) extends GlfwApp {
+class Triangle(val appContext: AppContext) extends App {
+
+  override protected def getAppContext: AppContext = appContext;
+
   private val vbo = glGenBuffers
   private val ibo = glGenBuffers
   private val vertices = Array(-0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f)
@@ -42,11 +45,10 @@ class Triangle(val appContext: GlfwAppContext) extends GlfwApp {
     glOrtho(-aspect, aspect, -1, 1, -1, 1)
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0L)
 
-    glfwSwapBuffers(appContext.window)
+    glfwSwapBuffers(appContext.getWindow())
   }
 
   override def onInit(): Unit = {
-
     super.onInit()
   }
 }
