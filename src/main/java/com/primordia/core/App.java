@@ -3,6 +3,7 @@ package com.primordia.core;
 import com.primordia.model.AppContext;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,18 +35,13 @@ public abstract class App {
     };
 
     public void onInit() {
-        log.info("GlfwApp::onInit");
+        log.info("OpenGL version: " + GL11.glGetString(GL11.GL_VERSION));
     }
 
     public void  onExit() {
-        log.info("GlfwApp::onExit");
     }
 
-    public void onRender() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glfwSwapBuffers(getAppContext().getWindow());
-    }
+    public abstract void onRender();
 
     public void run() {
         log.info("GlfwApp::run");
@@ -82,8 +78,9 @@ public abstract class App {
         glfwShowWindow(getAppContext().getWindow());
 
         while ( !glfwWindowShouldClose(getAppContext().getWindow()) ) {
-            glfwPollEvents();
+            glfwMakeContextCurrent(getAppContext().getWindow());
             onRender();
+            glfwPollEvents();
         }
 
         onExit();

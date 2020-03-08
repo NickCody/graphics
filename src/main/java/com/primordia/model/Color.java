@@ -1,5 +1,7 @@
 package com.primordia.model;
 
+import scala.math.Ordering;
+
 public class Color {
     private Float r;
     private Float g;
@@ -44,9 +46,24 @@ public class Color {
     public void setAlpha(Float a) {
         this.a = a;
     }
+
+    public String vec4s() {
+        return "vec4(" +
+                this.r +
+                "," +
+                this.g +
+                "," +
+                this.b +
+                "," +
+                this.a;
+    }
+
     static Color fromWeb(Integer r, Integer g, Integer b) {
         return new Color((float)r/255f, (float)g/255f, (float)b/255f);
     }
+
+    public static Color Black = fromWeb(0,0,0);
+    public static Color White = fromWeb(255,255,255);
 
     public static Color Reds_lightsalmon = fromWeb(255,160,122);
     public static Color Reds_salmon = fromWeb(250,128,114);
@@ -170,7 +187,6 @@ public class Color {
     public static Color Grays_lightslategray = fromWeb(119,136,153);
     public static Color Grays_slategray = fromWeb(112,128,144);
     public static Color Grays_darkslategray = fromWeb(47,79,79);
-    public static Color Grays_black = fromWeb(0,0,0);
     public static Color Browns_cornsilk = fromWeb(255,248,220);
     public static Color Browns_blanchedalmond = fromWeb(255,235,205);
     public static Color Browns_bisque = fromWeb(255,228,196);
