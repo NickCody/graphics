@@ -41,7 +41,11 @@ public abstract class App {
         log.info("GlfwApp::onExit");
     }
 
-    public abstract void onRender();
+    public void onRender() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glfwSwapBuffers(getAppContext().getWindow());
+    }
 
     public void run() {
         log.info("GlfwApp::run");

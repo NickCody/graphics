@@ -7,7 +7,7 @@ public class WindowParams {
     private String title = "App";
     private Integer width = 1920;
     private Integer height = 1080;
-    private Color backgroundColor = Color.Beige;
+    private Color backgroundColor = Color.Whites_whitesmoke;
     private String[] icons = {};
 
     public WindowParams(String title) {

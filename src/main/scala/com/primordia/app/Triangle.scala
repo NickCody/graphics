@@ -2,7 +2,7 @@ package com.primordia.app
 
 import java.nio.{FloatBuffer, IntBuffer}
 
-import com.primordia.core.{App, AppFactory}
+import com.primordia.core.{App, AppFactory, ScalaApp}
 import com.primordia.model.{AppContext, Color, WindowParams}
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFW.glfwSwapBuffers
@@ -11,16 +11,11 @@ import org.lwjgl.opengl.GL15.{GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER, GL_STATI
 
 object Triangle {
   def main(args: Array[String]): Unit = {
-    new Triangle(
-      AppFactory.createAppContext(
-        new WindowParams("Triangle", 1920, 1080, Color.AquaMarine, List("Green32x32.png", "Green64x64.png").toArray)
-      )).run()
+    new Triangle(AppFactory.createAppContext("Triangle")).run()
   }
 }
 
-class Triangle(val appContext: AppContext) extends App {
-
-  override protected def getAppContext: AppContext = appContext;
+class Triangle(override val appContext: AppContext) extends ScalaApp {
 
   private val vbo = glGenBuffers
   private val ibo = glGenBuffers
@@ -46,9 +41,5 @@ class Triangle(val appContext: AppContext) extends App {
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0L)
 
     glfwSwapBuffers(appContext.getWindow())
-  }
-
-  override def onInit(): Unit = {
-    super.onInit()
   }
 }
