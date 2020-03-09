@@ -23,7 +23,7 @@ object HelloTriangle {
           .defaultWindowParams()
           .title("Triangle")
           .backgroundColor(Color.Black)
-          .multiSamples(4)
+          .multiSamples(8)
       ))
 
     app.run()

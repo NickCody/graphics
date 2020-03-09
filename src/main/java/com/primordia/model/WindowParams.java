@@ -10,9 +10,10 @@ public class WindowParams {
     private Color backgroundColor = Color.Whites_whitesmoke;
     private String[] icons = {};
     private int multiSamples = 4;
+    private boolean fullScreen = false;
 
     public static WindowParams defaultWindowParams() {
-        return new WindowParams("App", 1920, 1080, Color.Whites_whitesmoke, new String[]{"Green32x32.png", "Green64x64.png"}, 4);
+        return new WindowParams("App", 1920, 1080, Color.Whites_whitesmoke, new String[]{"Green32x32.png", "Green64x64.png"}, 4, false);
     }
 
     public WindowParams() {}
@@ -21,7 +22,7 @@ public class WindowParams {
         this.title = title;
     }
 
-    public WindowParams(String title, Integer width, Integer height, Color backgroundColor, String[] icons, int multiSamples) {
+    public WindowParams(String title, Integer width, Integer height, Color backgroundColor, String[] icons, int multiSamples, boolean fullScreen) {
         this.title = title;
         this.width = width;
         this.height = height;
@@ -36,14 +37,19 @@ public class WindowParams {
                 ", height = " + height +
                 ", backgroundColor = " + backgroundColor +
                 ", icons = " + java.util.Arrays.toString(icons) +
-                ", multiSamples = " + multiSamples;
+                ", multiSamples = " + multiSamples +
+                ", fullScreen = " + fullScreen;
     }
+
+    //
+    // Getters / Setters
+    //
 
     public String getTitle() {
         return title;
     }
 
-    public void getTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -87,6 +93,18 @@ public class WindowParams {
         this.multiSamples = multiSamples;
     }
 
+    public boolean getFullScreen() {
+        return fullScreen;
+    }
+
+    public void setFullScreen(boolean fullScreen) {
+        this.fullScreen = fullScreen;
+    }
+
+    //
+    // Builders
+    //
+
     public WindowParams title(String title) {
         this.title = title;
         return this;
@@ -111,6 +129,11 @@ public class WindowParams {
 
     public WindowParams multiSamples(int multiSamples) {
         this.multiSamples = multiSamples;
+        return this;
+    }
+
+    public WindowParams fullScreen(boolean fullScreen) {
+        this.fullScreen = fullScreen;
         return this;
     }
 

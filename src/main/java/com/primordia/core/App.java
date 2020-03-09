@@ -74,11 +74,14 @@ public abstract class App {
 
         // Center App Window
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        glfwSetWindowPos(
-                getAppContext().getWindow(),
-                (vidmode.width() - getAppContext().getWindowParams().getWidth()) / 2,
-                (vidmode.height() - getAppContext().getWindowParams().getHeight()) / 2
-        );
+
+        if (!getAppContext().getWindowParams().getFullScreen()) {
+            glfwSetWindowPos(
+                    getAppContext().getWindow(),
+                    (vidmode.width() - getAppContext().getWindowParams().getWidth()) / 2,
+                    (vidmode.height() - getAppContext().getWindowParams().getHeight()) / 2
+            );
+        }
 
         try (MemoryStack frame = MemoryStack.stackPush()) {
             IntBuffer framebufferSize = frame.mallocInt(2);
@@ -102,6 +105,10 @@ public abstract class App {
         while ( !glfwWindowShouldClose(getAppContext().getWindow()) ) {
             onRender();
             glfwPollEvents();
+
+            if (getAppContext().getWindowParams().getFullScreen() && GLFW_PRESS == glfwGetKey(getAppContext().getWindow(), GLFW_KEY_ESCAPE)) {
+                glfwSetWindowShouldClose(getAppContext().getWindow(), true);
+            }
         }
 
         onExit();
