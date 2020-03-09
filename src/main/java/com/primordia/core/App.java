@@ -101,6 +101,8 @@ public abstract class App {
         glfwShowWindow(getAppContext().getWindow());
 
         // nvidia insight said this was fairly expensive 150micros
+        // If we're only a single window (single thread?) this is probably fine.
+
         glfwMakeContextCurrent(getAppContext().getWindow());
 
         while ( !glfwWindowShouldClose(getAppContext().getWindow()) ) {
