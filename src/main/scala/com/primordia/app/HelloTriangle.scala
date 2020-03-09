@@ -70,18 +70,19 @@ class HelloTriangle(override val appContext: AppContext) extends ScalaApp {
       throw new RuntimeException("shader_prog is not a shader program!")
     }
 
+    glUseProgram(shader_prog)
+
   }
 
   override def onRender(): Unit = {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-    glUseProgram(shader_prog)
     glUniform2f(u_resolution, windowWidth.toFloat, windowHeight.toFloat)
     glUniform2f(u_mouse, mouseX.toFloat, windowHeight - mouseY.toFloat)
+
     glBindVertexArray(vao)
     glDrawArrays(GL_TRIANGLES, 0, 3)
 
-    // update other events like input handling
     glfwSwapBuffers(getAppContext.getWindow)
   }
 

@@ -90,12 +90,6 @@ public abstract class App {
         // Enable v-sync
         glfwSwapInterval(1);
 
-//        glShadeModel(GL_SMOOTH);
-//        glEnable(GL_BLEND);
-//        glEnable(GL_MULTISAMPLE);
-//        glEnable(GL_LINE_SMOOTH);
-//        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-//        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_MULTISAMPLE);
 
         glfwShowWindow(getAppContext().getWindow());
