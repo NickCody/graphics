@@ -4,15 +4,20 @@ import com.primordia.model.AppContext;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL30.GL_RENDERBUFFER;
+import static org.lwjgl.opengl.GL30.glRenderbufferStorageMultisample;
 import static org.lwjgl.system.MemoryUtil.memAddress;
 
 public abstract class App {
@@ -86,6 +91,14 @@ public abstract class App {
 
         // Enable v-sync
         glfwSwapInterval(1);
+
+//        glShadeModel(GL_SMOOTH);
+//        glEnable(GL_BLEND);
+//        glEnable(GL_MULTISAMPLE);
+//        glEnable(GL_LINE_SMOOTH);
+//        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+//        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_MULTISAMPLE);
 
         glfwShowWindow(getAppContext().getWindow());
 

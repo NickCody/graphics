@@ -9,9 +9,10 @@ public class WindowParams {
     private Integer height = 1080;
     private Color backgroundColor = Color.Whites_whitesmoke;
     private String[] icons = {};
+    private int multiSamples = 4;
 
     public static WindowParams defaultWindowParams() {
-        return new WindowParams("App", 1920, 1080, Color.Whites_whitesmoke, new String[]{"Green32x32.png", "Green64x64.png"});
+        return new WindowParams("App", 1920, 1080, Color.Whites_whitesmoke, new String[]{"Green32x32.png", "Green64x64.png"}, 4);
     }
 
     public WindowParams() {}
@@ -20,12 +21,13 @@ public class WindowParams {
         this.title = title;
     }
 
-    public WindowParams(String title, Integer width, Integer height, Color backgroundColor, String[] icons) {
+    public WindowParams(String title, Integer width, Integer height, Color backgroundColor, String[] icons, int multiSamples) {
         this.title = title;
         this.width = width;
         this.height = height;
         this.backgroundColor = backgroundColor;
         this.icons = icons;
+        this.multiSamples = multiSamples;
     }
 
     public String toString() {
@@ -33,7 +35,8 @@ public class WindowParams {
                 ", width = " + width +
                 ", height = " + height +
                 ", backgroundColor = " + backgroundColor +
-                ", icons = " + java.util.Arrays.toString(icons);
+                ", icons = " + java.util.Arrays.toString(icons) +
+                ", multiSamples = " + multiSamples;
     }
 
     public String getTitle() {
@@ -76,6 +79,13 @@ public class WindowParams {
         this.icons = icons;
     }
 
+    public int getMultiSamples() {
+        return multiSamples;
+    }
+
+    public void setMultiSamples(int multiSamples) {
+        this.multiSamples = multiSamples;
+    }
 
     public WindowParams title(String title) {
         this.title = title;
@@ -96,6 +106,11 @@ public class WindowParams {
     }
     public WindowParams icons(String[] icons) {
         this.icons = icons;
+        return this;
+    }
+
+    public WindowParams multiSamples(int multiSamples) {
+        this.multiSamples = multiSamples;
         return this;
     }
 

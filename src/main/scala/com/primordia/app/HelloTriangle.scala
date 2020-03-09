@@ -23,6 +23,7 @@ object HelloTriangle {
           .defaultWindowParams()
           .title("Triangle")
           .backgroundColor(Color.Black)
+          .multiSamples(4)
       ))
 
     app.run()
@@ -36,34 +37,8 @@ class HelloTriangle(override val appContext: AppContext) extends ScalaApp {
      0.5f, -0.5f, 0.0f,
     -0.5f, -0.5f, 0.0f)
 
-  private val vertex_shader =
-    """
-      |in vec3 vp;
-      |void main() {
-      |    gl_Position = vec4(vp, 1.0);
-      |}
-      |""".stripMargin
-
-  private val fragment_shader =
-    s"""
-      |#ifdef GL_ES
-      |precision mediump float;
-      |#endif
-      |
-      |uniform vec2 u_resolution;
-      |uniform vec2 u_mouse;
-      |
-      |#define FALLOFF 800
-      |
-      |void main() {
-      | float distMouse = min(FALLOFF, distance(gl_FragCoord, u_mouse));
-      | float distZero = distance(gl_FragCoord, vec2(0,0))/u_resolution;
-      | vec3 color = mix(${Color.Blues_powderblue.vec3}, ${Color.Purples_blueviolet.vec3}, distZero);
-      | vec3 final = mix(color, ${Color.White.vec3}, 1.0-(distMouse/FALLOFF));
-      |	gl_FragColor = vec4(final,1.0);
-      |}
-      |
-      |""".stripMargin
+  private val vertex_shader = GLHelpers.loadResource("shaders/SimplePosition.vs")
+  private val fragment_shader = GLHelpers.loadResource("shaders/Highlight.fs")
 
   var shader_prog: Int = 0
   var vao: Int = 0

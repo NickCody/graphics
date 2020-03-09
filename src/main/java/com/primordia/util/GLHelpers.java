@@ -5,8 +5,11 @@ import org.lwjgl.BufferUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
+import java.util.Scanner;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -69,6 +72,17 @@ public class GLHelpers {
 
         log.info("Successfully created shader: " + code);
         return vs;
+    }
+
+    public static String loadResource(String resourceName) throws IOException {
+        InputStream stream = GLHelpers.class.getClassLoader().getResourceAsStream(resourceName);
+
+        if (stream == null) {
+            throw new IOException("Could not read " + resourceName);
+        }
+
+        Scanner s = new Scanner(stream).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
     }
 }
 

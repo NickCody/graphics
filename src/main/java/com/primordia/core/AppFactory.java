@@ -32,6 +32,7 @@ public class AppFactory {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_SAMPLES, windowParams.getMultiSamples());
 
         long window = glfwCreateWindow(windowParams.getWidth(), windowParams.getHeight(), windowParams.getTitle(), NULL, NULL);
 
