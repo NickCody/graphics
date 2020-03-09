@@ -38,29 +38,37 @@ class HelloTriangle(override val appContext: AppContext) extends ScalaApp {
 
   private val vertex_shader =
     """
-      |#version 400
-      |
       |in vec3 vp;
       |void main() {
       |    gl_Position = vec4(vp, 1.0);
       |}
       |""".stripMargin
 
-  // ${Color.Blues_blue.vec4s()}
   private val fragment_shader =
     s"""
-      |#version 400\n
+      |#ifdef GL_ES
+      |precision mediump float;
+      |#endif
       |
-      |out vec4 frag_color;
+      |uniform vec2 u_resolution;
+      |uniform vec2 u_mouse;
+      |
+      |#define FALLOFF 800
+      |
       |void main() {
-      |    frag_color = ${Color.Blues_darkslateblue.vec4s()});
+      | float distMouse = min(FALLOFF, distance(gl_FragCoord, u_mouse));
+      | float distZero = distance(gl_FragCoord, vec2(0,0))/u_resolution;
+      | vec3 color = mix(${Color.Blues_powderblue.vec3}, ${Color.Purples_blueviolet.vec3}, distZero);
+      | vec3 final = mix(color, ${Color.White.vec3}, 1.0-(distMouse/FALLOFF));
+      |	gl_FragColor = vec4(final,1.0);
       |}
+      |
       |""".stripMargin
-
-  println(fragment_shader)
 
   var shader_prog: Int = 0
   var vao: Int = 0
+  var u_resolution = 0
+  var u_mouse = 0
 
   override def onInit(): Unit = {
     super.onInit()
@@ -76,9 +84,12 @@ class HelloTriangle(override val appContext: AppContext) extends ScalaApp {
     val fs = GLHelpers.generateFragmentShader(fragment_shader);
 
     shader_prog = glCreateProgram
-    glAttachShader(shader_prog, fs)
     glAttachShader(shader_prog, vs)
+    glAttachShader(shader_prog, fs)
     glLinkProgram(shader_prog)
+
+    u_resolution = glGetUniformLocation(shader_prog, "u_resolution")
+    u_mouse = glGetUniformLocation(shader_prog, "u_mouse")
 
     if (!glIsProgram(shader_prog)) {
       throw new RuntimeException("shader_prog is not a shader program!")
@@ -90,6 +101,8 @@ class HelloTriangle(override val appContext: AppContext) extends ScalaApp {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     glUseProgram(shader_prog)
+    glUniform2f(u_resolution, windowWidth.toFloat, windowHeight.toFloat)
+    glUniform2f(u_mouse, mouseX.toFloat, windowHeight - mouseY.toFloat)
     glBindVertexArray(vao)
     glDrawArrays(GL_TRIANGLES, 0, 3)
 

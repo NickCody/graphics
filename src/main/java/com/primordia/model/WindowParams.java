@@ -28,6 +28,14 @@ public class WindowParams {
         this.icons = icons;
     }
 
+    public String toString() {
+        return "title = " + title +
+                ", width = " + width +
+                ", height = " + height +
+                ", backgroundColor = " + backgroundColor +
+                ", icons = " + java.util.Arrays.toString(icons);
+    }
+
     public String getTitle() {
         return title;
     }

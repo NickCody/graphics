@@ -1,6 +1,9 @@
 package com.primordia.util;
 
+import com.primordia.core.App;
 import org.lwjgl.BufferUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
@@ -10,6 +13,7 @@ import static org.lwjgl.opengl.GL30.*;
 
 
 public class GLHelpers {
+    protected static Logger log = LoggerFactory.getLogger(GLHelpers.class);
 
     //
     // Array Buffer Help
@@ -17,6 +21,7 @@ public class GLHelpers {
 
     public static int createVertexArray3f(float[] data) {
         // Setup Array Buffer
+        //
         int vbo = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         Buffer buffer = BufferUtils.createFloatBuffer(data.length).put(data);
@@ -62,6 +67,7 @@ public class GLHelpers {
             throw new RuntimeException(code + "is not compiled!");
         }
 
+        log.info("Successfully created shader: " + code);
         return vs;
     }
 }

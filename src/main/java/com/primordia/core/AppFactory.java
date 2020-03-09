@@ -8,9 +8,14 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL.createCapabilities;
 
 import org.lwjgl.opengl.GLCapabilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class AppFactory {
+
+    protected static Logger log = LoggerFactory.getLogger(AppFactory.class);
 
 
     public static AppContext createAppContext(String title) {
@@ -19,6 +24,8 @@ public class AppFactory {
 
     public static AppContext createAppContext(WindowParams windowParams) {
 
+        log.info("Creating AppContext with windowParams: " + windowParams.toString());
+
         if (!glfwInit())
             throw new IllegalStateException("Unable to initialize GLFW");
 
@@ -26,7 +33,7 @@ public class AppFactory {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
-        Long window = glfwCreateWindow(windowParams.getWidth(), windowParams.getHeight(), windowParams.getTitle(), NULL, NULL);
+        long window = glfwCreateWindow(windowParams.getWidth(), windowParams.getHeight(), windowParams.getTitle(), NULL, NULL);
 
         if (window == NULL)
             throw new IllegalStateException("Failed to create the GLFW window");
@@ -36,6 +43,8 @@ public class AppFactory {
         glfwMakeContextCurrent(window);
 
         GLCapabilities caps = createCapabilities();
+
+        log.info("GLCapabilities: " + caps.toString());
 
         return new AppContext(window, caps, windowParams);
     }

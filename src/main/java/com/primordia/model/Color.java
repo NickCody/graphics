@@ -47,15 +47,33 @@ public class Color {
         this.a = a;
     }
 
-    public String vec4s() {
-        return "vec4(" +
-                this.r +
-                "," +
-                this.g +
-                "," +
-                this.b +
-                "," +
-                this.a;
+    public String vec4() {
+        return "vec4(" + stringEncode(true) + ")";
+    }
+
+    public String vec3() {
+        return "vec3(" + stringEncode(false) + ")";
+    }
+
+    private String stringEncode(boolean includAlpha) {
+        if (includAlpha) {
+            return this.r +
+                    "," +
+                    this.g +
+                    "," +
+                    this.b +
+                    "," +
+                    this.a;
+        } else {
+            return this.r +
+                    "," +
+                    this.g +
+                    "," +
+                    this.b;
+        }
+    }
+    public String toString() {
+        return "Color(" + stringEncode(true) + ")";
     }
 
     static Color fromWeb(Integer r, Integer g, Integer b) {

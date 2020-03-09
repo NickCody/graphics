@@ -1,6 +1,7 @@
 package com.primordia.core;
 
 import com.primordia.model.AppContext;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL11;
@@ -19,6 +20,8 @@ public abstract class App {
     protected Logger log = LoggerFactory.getLogger(App.class);
     protected Integer windowWidth;
     protected Integer windowHeight;
+    protected Integer mouseX = 0;
+    protected Integer mouseY = 0;
 
     protected abstract AppContext getAppContext();
 
@@ -31,6 +34,15 @@ public abstract class App {
                 glViewport(0, 0, windowWidth, windowHeight);
                 onRender();
             }
+        }
+    };
+
+    GLFWCursorPosCallback cursorCallback = new GLFWCursorPosCallback() {
+        @Override
+        public void invoke(long window, double xpos, double ypos) {
+            mouseX = (int)xpos;
+            mouseY = (int)ypos;
+            onRender();
         }
     };
 
@@ -49,7 +61,7 @@ public abstract class App {
         onInit();
 
         glfwSetFramebufferSizeCallback(getAppContext().getWindow(), sizeCallback);
-
+        glfwSetCursorPosCallback(getAppContext().getWindow(), cursorCallback);
         glClearColor(
                 getAppContext().getWindowParams().getBackgroundColor().getRed(),
                 getAppContext().getWindowParams().getBackgroundColor().getGreen(),
