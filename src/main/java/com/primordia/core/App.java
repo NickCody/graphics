@@ -100,8 +100,10 @@ public abstract class App {
 
         glfwShowWindow(getAppContext().getWindow());
 
+        // nvidia insight said this was fairly expensive 150micros
+        glfwMakeContextCurrent(getAppContext().getWindow());
+
         while ( !glfwWindowShouldClose(getAppContext().getWindow()) ) {
-            glfwMakeContextCurrent(getAppContext().getWindow());
             onRender();
             glfwPollEvents();
         }
