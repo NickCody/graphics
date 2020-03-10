@@ -33,9 +33,9 @@ object HelloTriangle {
 class HelloTriangle(override val appContext: AppContext) extends ScalaApp {
 
   private val points: Array[Float] = Array(
-     0.0f,  0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
-    -0.5f, -0.5f, 0.0f)
+     0.0f,  0.75f, 0.0f,
+     0.75f, -0.75f, 0.0f,
+    -0.75f, -0.75f, 0.0f)
 
   private val vertex_shader = GLHelpers.loadResource("shaders/SimplePosition.vs")
   private val fragment_shader = GLHelpers.loadResource("shaders/Highlight.fs")
@@ -45,8 +45,8 @@ class HelloTriangle(override val appContext: AppContext) extends ScalaApp {
   var u_resolution = 0
   var u_mouse = 0
 
-  override def onInit(): Unit = {
-    super.onInit()
+  override def onBeforeInit(): Unit = {
+    super.onBeforeInit()
 
     glDepthFunc(GL_LESS)
 

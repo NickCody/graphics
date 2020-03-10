@@ -9,6 +9,7 @@ import static org.lwjgl.opengl.GL.createCapabilities;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,9 +61,10 @@ public class AppFactory {
         WindowIconLoader.setIcons(window, windowParams.getIcons());
 
         glfwMakeContextCurrent(window);
-
         GLCapabilities caps = createCapabilities();
 
+
+        log.info("OpenGL version: " + GL11.glGetString(GL11.GL_VERSION));
         log.info("GLCapabilities: " + caps.toString());
 
         return new AppContext(window, caps, windowParams);

@@ -1,7 +1,7 @@
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 
-#define FALLOFF 800
+#define FALLOFF 400
 
 void main() {
     float distMouse = min(FALLOFF, distance(gl_FragCoord, u_mouse));

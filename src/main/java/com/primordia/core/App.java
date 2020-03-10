@@ -25,6 +25,7 @@ public abstract class App {
     protected Integer windowHeight;
     protected Integer mouseX = 0;
     protected Integer mouseY = 0;
+    protected Double  currentSeconds = 0.0;
 
     protected abstract AppContext getAppContext();
 
@@ -49,20 +50,13 @@ public abstract class App {
         }
     };
 
-    public void onInit() {
-        log.info("OpenGL version: " + GL11.glGetString(GL11.GL_VERSION));
-    }
-
-    public void  onExit() {
-    }
-
+    // Overrides
+    public void onBeforeInit() {}
+    public void onAfterInit() {}
+    public void onExit() {}
     public abstract void onRender();
 
-    public void run() {
-        log.info("GlfwApp::run");
-
-        onInit();
-
+    private void internalInit() {
         glfwSetFramebufferSizeCallback(getAppContext().getWindow(), sizeCallback);
         glfwSetCursorPosCallback(getAppContext().getWindow(), cursorCallback);
         glClearColor(
@@ -101,20 +95,37 @@ public abstract class App {
         // If we're only a single window (single thread?) this is probably fine.
 
         glfwMakeContextCurrent(getAppContext().getWindow());
+    }
 
+    public void run() {
+        log.info("GlfwApp::run");
+
+        //
+        // Initialization
+        //
+        onBeforeInit();
+        internalInit();
+        onAfterInit();
+
+        //
+        // Render
+        //
         while ( !glfwWindowShouldClose(getAppContext().getWindow()) ) {
             onRender();
+
             glfwPollEvents();
+
+            currentSeconds = glfwGetTime();
 
             if (getAppContext().getWindowParams().getFullScreen() && GLFW_PRESS == glfwGetKey(getAppContext().getWindow(), GLFW_KEY_ESCAPE)) {
                 glfwSetWindowShouldClose(getAppContext().getWindow(), true);
             }
         }
 
-        onExit();
-
         try {
+            onExit();
             sizeCallback.free();
+            cursorCallback.free();
             glfwDestroyWindow(getAppContext().getWindow());
         } catch (Throwable t ){
             t.printStackTrace();
@@ -122,4 +133,5 @@ public abstract class App {
             glfwTerminate();
         }
     }
+
 }
