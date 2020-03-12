@@ -14,10 +14,10 @@ import com.primordia.util.GLHelpers
 import org.lwjgl.opengl.{GL, GL11, GLCapabilities}
 
 
-object HelloTriangle {
+object ShaderTriangle {
   def main(args: Array[String]): Unit = {
 
-    val app = new HelloTriangle(
+    val app = new ShaderTriangle(
       AppFactory.createAppContext(
         WindowParams
           .defaultWindowParams()
@@ -30,15 +30,12 @@ object HelloTriangle {
   }
 }
 
-class HelloTriangle(override val appContext: AppContext) extends ScalaApp {
+class ShaderTriangle(override val appContext: AppContext) extends ScalaApp {
 
   private val points: Array[Float] = Array(
      0.0f,  0.75f, 0.0f,
      0.75f, -0.75f, 0.0f,
     -0.75f, -0.75f, 0.0f)
-
-  private val vertex_shader = GLHelpers.loadResource("shaders/SimplePosition.vs")
-  private val fragment_shader = GLHelpers.loadResource("shaders/Highlight.fs")
 
   var shader_prog: Int = 0
   var vao: Int = 0
@@ -48,27 +45,20 @@ class HelloTriangle(override val appContext: AppContext) extends ScalaApp {
   override def onBeforeInit(): Unit = {
     super.onBeforeInit()
 
-    glDepthFunc(GL_LESS)
-
     // Setup vertex buffer, vertex array + attributes
     vao = GLHelpers.createVertexArray3f(points)
 
     // Shader Setup
     //
-    val vs = GLHelpers.generateVertexShader(vertex_shader)
-    val fs = GLHelpers.generateFragmentShader(fragment_shader);
+    val vs = GLHelpers.generateVertexShader(GLHelpers.loadResource("shaders/SimplePosition.vs"))
+    val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource("shaders/Highlight.fs"));
 
-    shader_prog = glCreateProgram
-    glAttachShader(shader_prog, vs)
-    glAttachShader(shader_prog, fs)
-    glLinkProgram(shader_prog)
+    shader_prog = GLHelpers.createShaderProgram(List(vs, fs).toArray)
 
+    // Uniform setup
+    //
     u_resolution = glGetUniformLocation(shader_prog, "u_resolution")
     u_mouse = glGetUniformLocation(shader_prog, "u_mouse")
-
-    if (!glIsProgram(shader_prog)) {
-      throw new RuntimeException("shader_prog is not a shader program!")
-    }
 
     glUseProgram(shader_prog)
 
