@@ -42,8 +42,8 @@ class ColorTriangle(override val appContext: AppContext) extends ScalaApp {
 
   var shader_prog: Int = 0
   var vao: Int = 0
-//  var u_resolution = 0
-//  var u_mouse = 0
+  var u_resolution = 0
+  var u_mouse = 0
 
   override def onBeforeInit(): Unit = {
 
@@ -82,8 +82,8 @@ class ColorTriangle(override val appContext: AppContext) extends ScalaApp {
 
     // Uniform setup
     //
-//    u_resolution = glGetUniformLocation(shader_prog, "u_resolution")
-//    u_mouse = glGetUniformLocation(shader_prog, "u_mouse")
+    u_resolution = glGetUniformLocation(shader_prog, "u_resolution")
+    u_mouse = glGetUniformLocation(shader_prog, "u_mouse")
 
     glUseProgram(shader_prog)
 
@@ -92,8 +92,8 @@ class ColorTriangle(override val appContext: AppContext) extends ScalaApp {
   override def onRender(): Unit = {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-//    glUniform2f(u_resolution, windowWidth.toFloat, windowHeight.toFloat)
-//    glUniform2f(u_mouse, mouseX.toFloat, windowHeight - mouseY.toFloat)
+    glUniform2f(u_resolution, windowWidth.toFloat, windowHeight.toFloat)
+    glUniform2f(u_mouse, mouseX.toFloat, windowHeight - mouseY.toFloat)
 
     glBindVertexArray(vao)
     glDrawArrays(GL_TRIANGLES, 0, 3)
