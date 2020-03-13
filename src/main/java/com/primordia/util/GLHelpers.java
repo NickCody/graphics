@@ -3,11 +3,11 @@ package com.primordia.util;
 import org.lwjgl.BufferUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.math.Ordering;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.Buffer;
-import java.nio.FloatBuffer;
+import java.nio.*;
 import java.util.Scanner;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -23,7 +23,7 @@ public class GLHelpers {
     // Array Buffer Help
     //
 
-    public static int createVertexArray3f(float[] data) throws RuntimeException {
+    public static int createArrayBuffer3f(float[] data) throws RuntimeException {
         // Setup Array Buffer
         //
         int vbo = glGenBuffers();
@@ -40,9 +40,9 @@ public class GLHelpers {
             throw new RuntimeException("vao is not a vertex array!");
         }
 
-        glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0L);
+        glEnableVertexAttribArray(0);
 
         return vao;
     }
@@ -58,21 +58,24 @@ public class GLHelpers {
         return createAndCompileShader(code, GL_FRAGMENT_SHADER);
     }
 
-    public static Integer createAndCompileShader(String code, int shaderKind) throws RuntimeException {
-        int vs = glCreateShader(shaderKind);
-        glShaderSource(vs, code);
-        glCompileShader(vs);
+    public static Integer createAndCompileShader(String source, int shaderKind) throws RuntimeException {
+        int shader = glCreateShader(shaderKind);
+        glShaderSource(shader, source);
+        glCompileShader(shader);
 
-        if (!glIsShader(vs)) {
-            throw new RuntimeException(code + "is not a shader or not compiled!");
+        if (!glIsShader(shader)) {
+            throw new RuntimeException(source + "is not a shader or not compiled!");
         }
 
-        if (glGetShaderi(vs, GL_COMPILE_STATUS) == GL_FALSE) {
-            throw new RuntimeException(code + "is not compiled!");
+        if (glGetShaderi(shader, GL_COMPILE_STATUS) == GL_FALSE) {
+            String shaderLog = glGetShaderInfoLog(shader);
+            glDeleteShader(shader);
+            throw new RuntimeException("\n" + source + "\n...is not compiled!\nError was: " + shaderLog);
         }
 
-        log.info("Successfully created shader: " + code);
-        return vs;
+        log.info("Successfully created shader!");
+        log.debug(source);
+        return shader;
     }
 
     public static String loadResource(String resourceName) throws IOException {

@@ -43,15 +43,14 @@ class ShaderTriangle(override val appContext: AppContext) extends ScalaApp {
   var u_mouse = 0
 
   override def onBeforeInit(): Unit = {
-    super.onBeforeInit()
 
     // Setup vertex buffer, vertex array + attributes
-    vao = GLHelpers.createVertexArray3f(points)
+    vao = GLHelpers.createArrayBuffer3f(points)
 
     // Shader Setup
     //
-    val vs = GLHelpers.generateVertexShader(GLHelpers.loadResource("shaders/SimplePosition.vs"))
-    val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource("shaders/Highlight.fs"));
+    val vs = GLHelpers.generateVertexShader(GLHelpers.loadResource("shaders/SimplePosition.vert"))
+    val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource("shaders/Highlight.frag"));
 
     shader_prog = GLHelpers.createShaderProgram(List(vs, fs).toArray)
 
