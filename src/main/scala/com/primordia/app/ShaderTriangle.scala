@@ -32,7 +32,7 @@ object ShaderTriangle {
 
 class ShaderTriangle(override val appContext: AppContext) extends ScalaApp {
 
-  private val points: Array[Float] = Array(
+  private val points = Array(
      0.0f,  0.75f, 0.0f,
      0.75f, -0.75f, 0.0f,
     -0.75f, -0.75f, 0.0f)
