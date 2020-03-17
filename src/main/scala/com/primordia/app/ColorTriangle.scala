@@ -19,7 +19,7 @@ object ColorTriangle {
       AppFactory.createAppContext(
         WindowParams
           .defaultWindowParams()
-          .title("Triangle")
+          .title("ColorTriangle")
           .backgroundColor(Color.Black)
           .multiSamples(8)
       ))

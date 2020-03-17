@@ -3,7 +3,7 @@
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 
-#define FALLOFF 400.0
+#define FALLOFF (u_resolution.x / 8.0)
 
 void main() {
     vec2 origin = vec2(0,0);

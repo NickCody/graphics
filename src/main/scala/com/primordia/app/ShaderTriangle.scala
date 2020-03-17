@@ -21,7 +21,7 @@ object ShaderTriangle {
       AppFactory.createAppContext(
         WindowParams
           .defaultWindowParams()
-          .title("Triangle")
+          .title("ShaderTriangle")
           .backgroundColor(Color.Black)
           .multiSamples(8)
       ))

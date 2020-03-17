@@ -8,7 +8,7 @@ uniform vec2 u_mouse;
 in vec3 color;
 out vec4 frag_color;
 
-#define FALLOFF 300.0
+#define FALLOFF (u_resolution.x / 8.0)
 
 void main() {
     float distMouse = min(FALLOFF, distance(gl_FragCoord.xy, u_mouse));
