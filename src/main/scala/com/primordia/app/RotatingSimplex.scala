@@ -11,10 +11,10 @@ import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL15.{GL_ARRAY_BUFFER, GL_STATIC_DRAW, glBindBuffer, glBufferData, glGenBuffers, glIsBuffer}
 
 
-object LavaLamp {
+object RotatingSimplex {
   def main(args: Array[String]): Unit = {
 
-    val app = new LavaLamp(
+    val app = new RotatingSimplex(
       AppFactory.createAppContext(
         WindowParams
           .defaultWindowParams()
@@ -26,7 +26,7 @@ object LavaLamp {
     app.run()
   }
 }
-class LavaLamp(override val appContext: AppContext) extends ScalaApp {
+class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
   private val points: Array[Float] = Array(
     -1.0f,  1.0f,  0.0f,
@@ -62,7 +62,7 @@ class LavaLamp(override val appContext: AppContext) extends ScalaApp {
     // Shader Setup
     //
     val vs = GLHelpers.generateVertexShader(GLHelpers.loadResource("shaders/SimplePosition.vert"))
-    val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource("shaders/Dots.frag"));
+    val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource("shaders/RotatingSimplex.frag"));
     shader_prog = GLHelpers.createShaderProgram(List(vs, fs).toArray)
     glUseProgram(shader_prog)
 

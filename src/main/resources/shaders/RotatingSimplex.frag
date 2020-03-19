@@ -94,9 +94,9 @@ void main() {
 
     // Generate Noise
     //
-    vec2 r1 = rotate(st_0, u_time/20.0);
+    vec2 r1 = rotate(st_0, u_time/10.0);
     float rn1 = snoise(r1);
-    vec2 r2 = rotate(st_0, -u_time/20.0);
+    vec2 r2 = rotate(st_0, -u_time/10.0);
     float rn2 = snoise(r2);
 
     vec2 st = (gl_FragCoord.xy - vec2(u_resolution.x,u_resolution.y))/200; // fixed scale
