@@ -30,11 +30,9 @@ class LavaLamp(override val appContext: AppContext) extends ScalaApp {
 
   private val points: Array[Float] = Array(
     -1.0f,  1.0f,  0.0f,
-    -1.0f, -1.0f,  0.0f,
+     1.0f,  1.0f,  0.0f,
      1.0f, -1.0f,  0.0f,
-     1.0f,  -1.0f,  0.0f,
-     1.0f,   1.0f,  0.0f,
-    -1.0f,   1.0f, -0.0f
+    -1.0f,  -1.0f, 0.0f
     )
 
   var shader_prog: Int = 0
@@ -73,7 +71,7 @@ class LavaLamp(override val appContext: AppContext) extends ScalaApp {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     glBindVertexArray(vao)
-    glDrawArrays(GL_TRIANGLES, 0, 6)
+    glDrawArrays(GL_POLYGON, 0, 4)
 
     glfwSwapBuffers(getAppContext.getWindow)
   }
