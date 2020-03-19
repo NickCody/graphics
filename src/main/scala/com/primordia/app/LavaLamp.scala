@@ -37,6 +37,7 @@ class LavaLamp(override val appContext: AppContext) extends ScalaApp {
 
   var shader_prog: Int = 0
   var u_time = 0
+  var u_resolution = 0
   var vao = 0;
 
   override def onBeforeInit(): Unit = {
@@ -57,17 +58,26 @@ class LavaLamp(override val appContext: AppContext) extends ScalaApp {
     glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0L);
     glEnableVertexAttribArray(0);
 
+
     // Shader Setup
     //
     val vs = GLHelpers.generateVertexShader(GLHelpers.loadResource("shaders/SimplePosition.vert"))
     val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource("shaders/Dots.frag"));
     shader_prog = GLHelpers.createShaderProgram(List(vs, fs).toArray)
     glUseProgram(shader_prog)
+
+    // Uniform setup
+    //
+    u_resolution = glGetUniformLocation(shader_prog, "u_resolution")
+    u_time = glGetUniformLocation(shader_prog, "u_time")
+
   }
 
   override def onRender(): Unit = {
 
     glUniform1f(u_time, glfwGetTime().toFloat);
+    glUniform2f(u_resolution, windowWidth.toFloat, windowHeight.toFloat)
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     glBindVertexArray(vao)
