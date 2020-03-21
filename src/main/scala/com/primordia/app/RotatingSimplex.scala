@@ -40,6 +40,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
   var shader_prog: Int = 0
   var u_time = 0
   var u_resolution = 0
+
   var u_rotated_scale = 0
   var u_primary_scale = 0
   var rotated_scale: Float = 0.02f
@@ -47,28 +48,38 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
   var u_rot_left_divisor = 0
   var u_rot_right_divisor = 0
-
   var rot_left_divisor: Float = 3
   var rot_right_divisor: Float = 3
 
+  var u_animated = 0
+  var animated = false
+  var last_rendered_timecode: Float =  glfwGetTime().toFloat
+  var delta_timecode: Float = 0
   var vao = 0;
 
   override def onBeforeInit(): Unit = {
-
 
     val keyCallback = new GLFWKeyCallback() {
       override def invoke(window: Long, key: Int, scancode: Int, action: Int, mods: Int): Unit = {
         if (action == GLFW_RELEASE) {
           log.info(s"key=$key, scancode=$scancode")
           key match {
-            case 'E' => rotated_scale = rotated_scale / 2.0f
-            case 'R' => rotated_scale = rotated_scale * 2.0f
-            case 'O' => primary_scale = primary_scale / 2.0f
-            case 'P' => primary_scale = primary_scale * 2.0f
-            case 'F' => rot_left_divisor = rot_left_divisor + 5.0f;
-            case 'D' => rot_left_divisor = rot_left_divisor - 5.0f;
-            case 'L' => rot_right_divisor = rot_right_divisor + 5.0f;
-            case 'K' => rot_right_divisor = rot_right_divisor - 5.0f;
+            case GLFW_KEY_E => rotated_scale = rotated_scale / 2.0f
+            case GLFW_KEY_R => rotated_scale = rotated_scale * 2.0f
+            case GLFW_KEY_O => primary_scale = primary_scale / 2.0f
+            case GLFW_KEY_P => primary_scale = primary_scale * 2.0f
+            case GLFW_KEY_F => rot_left_divisor = rot_left_divisor + 5.0f;
+            case GLFW_KEY_D => rot_left_divisor = rot_left_divisor - 5.0f;
+            case GLFW_KEY_L => rot_right_divisor = rot_right_divisor + 5.0f;
+            case GLFW_KEY_K => rot_right_divisor = rot_right_divisor - 5.0f;
+            case GLFW_KEY_SPACE =>
+              if (animated) {
+                animated = false
+              } else {
+                animated = true
+                delta_timecode = glfwGetTime().toFloat - last_rendered_timecode
+              }
+
             case _ =>
           }
           dumpParameters()
@@ -114,7 +125,12 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
   override def onRender(): Unit = {
 
-    glUniform1f(u_time, glfwGetTime().toFloat);
+
+    if (animated) {
+      last_rendered_timecode = glfwGetTime().toFloat - delta_timecode
+    }
+
+    glUniform1f(u_time, last_rendered_timecode );
     glUniform2f(u_resolution, windowWidth.toFloat, windowHeight.toFloat)
     glUniform1f(u_rotated_scale, rotated_scale);
     glUniform1f(u_primary_scale, primary_scale);
@@ -131,5 +147,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
   def dumpParameters(): Unit = {
     log.info(s"rotated_scale=$rotated_scale, primary_scale=$primary_scale")
+    log.info(s"delta_timecode = $delta_timecode, last_rendered_timecode=$last_rendered_timecode")
+
   }
 }
