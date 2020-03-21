@@ -2,6 +2,10 @@
 
 uniform float u_time;
 uniform vec2 u_resolution;
+uniform float u_rotated_scale;
+uniform float u_primary_scale;
+uniform float u_rot_left_divisor;
+uniform float u_rot_right_divisor;
 
 layout(origin_upper_left) in vec4 gl_FragCoord;
 
@@ -88,19 +92,29 @@ vec2 rotate(vec2 v, float a) {
     return m * v;
 }
 
-void main() {
-    float scale = cos(u_time) + 2;
-    vec2 st_0 = (gl_FragCoord.xy)/200; // fixed scale
+vec2 rotateOrigin(vec2 v, vec2 center, float a) {
+    vec2 t = v - center;
+    vec2 r = rotate(t, a);
+    return r + center;
+}
 
-    // Generate Noise
-    //
-    vec2 r1 = rotate(st_0, u_time/10.0);
+void main() {
+    vec2 rotated_resolution = u_resolution.xy * u_rotated_scale;
+    vec2 primary_resolution = u_resolution.xy * u_primary_scale;
+    vec2 rotated_fragCoord = gl_FragCoord.xy * u_rotated_scale;
+    vec2 primary_fragCoord = gl_FragCoord.xy * u_primary_scale;
+    vec2 rotated_center = rotated_resolution.xy/2.0;
+    vec2 primary_center = primary_resolution.xy/2.0;
+
+    vec2 r1 = rotateOrigin(rotated_fragCoord, rotated_center, u_time/u_rot_left_divisor);
+    vec2 r2 = rotateOrigin(rotated_fragCoord, rotated_center, u_time/u_rot_right_divisor);
+
     float rn1 = snoise(r1);
-    vec2 r2 = rotate(st_0, -u_time/10.0);
     float rn2 = snoise(r2);
 
-    vec2 st = (gl_FragCoord.xy - vec2(u_resolution.x,u_resolution.y))/200; // fixed scale
-    float n = snoise(st*((rn1+rn2)/2.0));
+    //float n = snoise((primary_fragCoord+primary_center) * ((rn1 + rn2)/2.0));
+    float n = snoise((primary_fragCoord+primary_center) * rn1 * rn2);
+
     vec3 nc = vec3(n);
 
     frag_color = vec4(nc, 1.0);

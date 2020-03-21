@@ -1,19 +1,16 @@
 package com.primordia.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class WindowParams {
     private String title = "App";
     private Integer width = 1920;
     private Integer height = 1080;
     private Color backgroundColor = Color.Whites_whitesmoke;
-    private String[] icons = {};
+    private String[] icons = new String[]{"Green32x32.png", "Green64x64.png"};
     private int multiSamples = 4;
-    private boolean fullScreen = false;
+    private boolean fullScreen = System.getProperty("fullscreen", "false").equals("true");
 
     public static WindowParams defaultWindowParams() {
-        return new WindowParams("App", 1920, 1080, Color.Whites_whitesmoke, new String[]{"Green32x32.png", "Green64x64.png"}, 4, false);
+        return new WindowParams();
     }
 
     public WindowParams() {}

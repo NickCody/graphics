@@ -13,7 +13,7 @@ out vec4 frag_color;
 void main() {
     float distMouse = min(FALLOFF, distance(gl_FragCoord.xy, u_mouse));
 
-    float lin_falloff = 1.0-(min(distMouse, FALLOFF) / FALLOFF);
+//    float lin_falloff = 1.0-(min(distMouse, FALLOFF) / FALLOFF);
     float trig_falloff = cos(min(distMouse, FALLOFF) / FALLOFF * PI_2);
 
     vec3 finalColor = mix(color, vec3(1.0,1.0,1.0), pow(trig_falloff, 2));

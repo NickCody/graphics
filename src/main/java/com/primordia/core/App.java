@@ -66,15 +66,9 @@ public abstract class App {
                 getAppContext().getWindowParams().getBackgroundColor().getAlpha());
         glEnable(GL_DEPTH_TEST);
 
-        // Center App Window
-        GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
         if (!getAppContext().getWindowParams().getFullScreen()) {
-            glfwSetWindowPos(
-                    getAppContext().getWindow(),
-                    (vidmode.width() - getAppContext().getWindowParams().getWidth()) / 2,
-                    (vidmode.height() - getAppContext().getWindowParams().getHeight()) / 2
-            );
+            makeFullScreen();
         }
 
         try (MemoryStack frame = MemoryStack.stackPush()) {
@@ -111,11 +105,11 @@ public abstract class App {
         // Render
         //
         while ( !glfwWindowShouldClose(getAppContext().getWindow()) ) {
+            currentSeconds = glfwGetTime();
+
             onRender();
 
             glfwPollEvents();
-
-            currentSeconds = glfwGetTime();
 
             if (getAppContext().getWindowParams().getFullScreen() && GLFW_PRESS == glfwGetKey(getAppContext().getWindow(), GLFW_KEY_ESCAPE)) {
                 glfwSetWindowShouldClose(getAppContext().getWindow(), true);
@@ -134,4 +128,24 @@ public abstract class App {
         }
     }
 
+    public void makeFullScreen() {
+        GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+        glfwSetWindowPos(
+                getAppContext().getWindow(),
+                (vidmode.width() - getAppContext().getWindowParams().getWidth()) / 2,
+                (vidmode.height() - getAppContext().getWindowParams().getHeight()) / 2
+        );
+    }
+
+    public void makeWindowed() {
+        GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+        glfwSetWindowPos(
+                getAppContext().getWindow(),
+                (vidmode.width() - getAppContext().getWindowParams().getWidth()) / 2,
+                (vidmode.height() - getAppContext().getWindowParams().getHeight()) / 2
+        );
+
+    }
 }
