@@ -1,13 +1,14 @@
 package com.primordia.core;
 
 import com.primordia.model.AppContext;
+import org.eclipse.swt.widgets.Display;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -26,6 +27,8 @@ public abstract class App {
     protected Integer mouseX = 0;
     protected Integer mouseY = 0;
     protected Double  currentSeconds = 0.0;
+
+    //protected Display display = new Display();
 
     protected abstract AppContext getAppContext();
 
@@ -54,11 +57,13 @@ public abstract class App {
     public void onBeforeInit() {}
     public void onAfterInit() {}
     public void onExit() {}
+    public void onProcessMessages() {};
     public abstract void onRender();
 
     private void internalInit() {
         glfwSetFramebufferSizeCallback(getAppContext().getWindow(), sizeCallback);
         glfwSetCursorPosCallback(getAppContext().getWindow(), cursorCallback);
+
         glClearColor(
                 getAppContext().getWindowParams().getBackgroundColor().getRed(),
                 getAppContext().getWindowParams().getBackgroundColor().getGreen(),
@@ -109,6 +114,8 @@ public abstract class App {
 
             onRender();
 
+            // Process window messages (for both SWT _and_ GLFW)
+            //display.readAndDispatch();
             glfwPollEvents();
 
             if (getAppContext().getWindowParams().getFullScreen() && GLFW_PRESS == glfwGetKey(getAppContext().getWindow(), GLFW_KEY_ESCAPE)) {
@@ -121,6 +128,7 @@ public abstract class App {
             sizeCallback.free();
             cursorCallback.free();
             glfwDestroyWindow(getAppContext().getWindow());
+            //display.dispose();
         } catch (Throwable t ){
             t.printStackTrace();
         } finally {

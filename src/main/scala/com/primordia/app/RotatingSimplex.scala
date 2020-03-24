@@ -1,6 +1,6 @@
 package com.primordia.app
 
-import com.primordia.core.{AppFactory, ScalaApp}
+import com.primordia.core.{AppFactory, ScalaApp, SwtWindow}
 import com.primordia.model.{AppContext, Color, WindowParams}
 import org.lwjgl.glfw.GLFW._
 import org.lwjgl.opengl.GL11._
@@ -21,7 +21,6 @@ object RotatingSimplex {
           .title("LavaLamp")
           .backgroundColor(Color.Black)
           .multiSamples(32)
-          .fullScreen(false)
       ))
 
     app.run()
@@ -57,6 +56,13 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
   var delta_timecode: Float = 0
   var vao = 0;
 
+//  val optionsWindow = new SwtWindow(display,
+//    WindowParams.defaultWindowParams()
+//      .title("Options")
+//      .backgroundColor(Color.Blues_cornflowerblue)
+//      .width(800)
+//      .height(600))
+
   override def onBeforeInit(): Unit = {
 
     val keyCallback = new GLFWKeyCallback() {
@@ -72,6 +78,9 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
             case GLFW_KEY_D => rot_left_divisor = rot_left_divisor - 5.0f;
             case GLFW_KEY_L => rot_right_divisor = rot_right_divisor + 5.0f;
             case GLFW_KEY_K => rot_right_divisor = rot_right_divisor - 5.0f;
+            case GLFW_KEY_H =>
+              //optionsWindow.open()
+
             case GLFW_KEY_SPACE =>
               if (animated) {
                 animated = false
@@ -125,6 +134,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
   override def onRender(): Unit = {
 
+    //optionsWindow.onRender()
 
     if (animated) {
       last_rendered_timecode = glfwGetTime().toFloat - delta_timecode
@@ -146,8 +156,24 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
   }
 
   def dumpParameters(): Unit = {
-    log.info(s"rotated_scale=$rotated_scale, primary_scale=$primary_scale")
-    log.info(s"delta_timecode = $delta_timecode, last_rendered_timecode=$last_rendered_timecode")
+    val params =
+      s"""
+        | -=-=-=-=-=-==-=-=--
+        |Parameter Output:
+        | =-=-=-=-=-=-=-=--=-
+        |rotated_scale          = $rotated_scale
+        |primary_scale          = $primary_scale
+        |rot_left_divisor       = $rot_left_divisor
+        |rot_right_divisor      = $rot_right_divisor
+        |
+        |delta_timecode         = $delta_timecode
+        |last_rendered_timecode = $last_rendered_timecode
+        |""".stripMargin
 
+    log.info(params)
+  }
+
+  override def onExit(): Unit = {
+    //optionsWindow.close()
   }
 }
