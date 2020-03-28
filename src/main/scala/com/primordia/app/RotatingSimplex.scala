@@ -68,7 +68,6 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
     val keyCallback = new GLFWKeyCallback() {
       override def invoke(window: Long, key: Int, scancode: Int, action: Int, mods: Int): Unit = {
         if (action == GLFW_RELEASE) {
-          log.info(s"key=$key, scancode=$scancode")
           key match {
             case GLFW_KEY_E => rotated_scale = rotated_scale / 2.0f
             case GLFW_KEY_R => rotated_scale = rotated_scale * 2.0f
