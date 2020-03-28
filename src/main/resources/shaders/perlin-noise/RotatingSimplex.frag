@@ -101,21 +101,29 @@ vec2 rotateOrigin(vec2 v, vec2 center, float a) {
 void main() {
     vec2 rotated_resolution = u_resolution.xy * u_rotated_scale;
     vec2 primary_resolution = u_resolution.xy * u_primary_scale;
+
     vec2 rotated_fragCoord = gl_FragCoord.xy * u_rotated_scale;
     vec2 primary_fragCoord = gl_FragCoord.xy * u_primary_scale;
+
     vec2 rotated_center = rotated_resolution.xy/2.0;
     vec2 primary_center = primary_resolution.xy/2.0;
 
+    vec2 r0 = primary_fragCoord+primary_center;
     vec2 r1 = rotateOrigin(rotated_fragCoord, rotated_center, u_time/u_rot_left_divisor);
     vec2 r2 = rotateOrigin(rotated_fragCoord, rotated_center, u_time/u_rot_right_divisor);
 
+    float rn0 = snoise(r0);
     float rn1 = snoise(r1);
     float rn2 = snoise(r2);
+    float c = (rn1 + rn2)/2.0;
 
-    //float n = snoise((primary_fragCoord+primary_center) * ((rn1 + rn2)/2.0));
-    float n = snoise((primary_fragCoord+primary_center) * rn1 * rn2);
+    float n = snoise(r0 * c);
 
-    vec3 nc = vec3(n);
+    float r = abs(cos(u_time/u_rot_left_divisor)) * n;
+    float g = abs(sin(u_time/u_rot_right_divisor)) * n;
+    float b = abs(sin(-u_time)) * n;
+
+    vec3 nc = vec3(r, g, b);
 
     frag_color = vec4(nc, 1.0);
 }

@@ -21,6 +21,7 @@ object RotatingSimplex {
           .title("LavaLamp")
           .backgroundColor(Color.Black)
           .multiSamples(32)
+          .fullScreen(true)
       ))
 
     app.run()
@@ -47,8 +48,8 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
   var u_rot_left_divisor = 0
   var u_rot_right_divisor = 0
-  var rot_left_divisor: Float = 3
-  var rot_right_divisor: Float = 3
+  var rot_left_divisor: Float = 17
+  var rot_right_divisor: Float = 23
 
   var u_animated = 0
   var animated = false
