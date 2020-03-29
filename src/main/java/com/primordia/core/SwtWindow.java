@@ -18,24 +18,22 @@ import static org.lwjgl.opengl.GL.setCapabilities;
 import static org.lwjgl.opengl.GL11.*;
 
 public class SwtWindow {
-    final Shell shell;
     GLCapabilities swtCapabilities;
-    Callback swtDebugProc;
     GLCanvas swtCanvas;
     WindowParams windowParams;
+    final Shell swtShell;
 
-    public SwtWindow(Display display, WindowParams windowParams) {
+    public SwtWindow(App app, WindowParams windowParams) {
         this.windowParams = windowParams;
+        swtShell = new Shell(app.getDisplay());
+        swtShell.setText(windowParams.getTitle());
+        swtShell.setLayout(new FillLayout());
 
-        shell = new Shell(display);
-        shell.setText(windowParams.getTitle());
-        shell.setLayout(new FillLayout());
-
-        shell.addListener(SWT.Traverse, new Listener() {
+        swtShell.addListener(SWT.Traverse, new Listener() {
             public void handleEvent(Event event) {
                 switch (event.detail) {
                     case SWT.TRAVERSE_ESCAPE:
-                        shell.close();
+                        swtShell.close();
                         event.detail = SWT.TRAVERSE_NONE;
                         event.doit = false;
                         break;
@@ -47,21 +45,19 @@ public class SwtWindow {
 
         GLData data = new GLData();
         data.doubleBuffer = true;
-        swtCanvas = new GLCanvas(shell, SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE, data);
-        int dw = shell.getSize().x - shell.getClientArea().width;
-        int dh = shell.getSize().y - shell.getClientArea().height;
-        shell.setSize(windowParams.getWidth() + dw, windowParams.getHeight() + dh);
-        swtCanvas.setCurrent();
+        swtCanvas = new GLCanvas(swtShell, SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE, data);
+        int dw = swtShell.getSize().x - swtShell.getClientArea().width;
+        int dh = swtShell.getSize().y - swtShell.getClientArea().height;
+        swtShell.setSize(windowParams.getWidth() + dw, windowParams.getHeight() + dh);
         swtCapabilities = createCapabilities();
-        swtDebugProc = GLUtil.setupDebugMessageCallback();
     }
 
     public void open() {
-        shell.open();
+        swtShell.open();
     }
 
     public void onRender() {
-        if (!shell.isDisposed()) {
+        if (!swtShell.isDisposed()) {
             // Render to SWT window
             if (!swtCanvas.isDisposed()) {
                 swtCanvas.setCurrent();
@@ -74,10 +70,7 @@ public class SwtWindow {
     }
 
     public void close() {
-        // Dispose of SWT
-        if (swtDebugProc != null)
-            swtDebugProc.free();
-        if (!shell.isDisposed())
-            shell.dispose();
+        if (!swtShell.isDisposed())
+            swtShell.dispose();
     }
 }

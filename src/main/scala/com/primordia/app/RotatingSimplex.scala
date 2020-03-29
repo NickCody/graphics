@@ -20,7 +20,8 @@ object RotatingSimplex {
           .defaultWindowParams()
           .title("Rotating Simplex Noise")
           .backgroundColor(Color.Black)
-          .multiSamples(Int.MaxValue)
+          .multiSamples(Int.MaxValue),
+        true
       ))
 
     app.run()
@@ -56,12 +57,12 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
   var delta_timecode: Float = 0
   var vao = 0;
 
-//  val optionsWindow = new SwtWindow(display,
-//    WindowParams.defaultWindowParams()
-//      .title("Options")
-//      .backgroundColor(Color.Blues_cornflowerblue)
-//      .width(800)
-//      .height(600))
+  val optionsWindow = new SwtWindow(this,
+    WindowParams.defaultWindowParams()
+      .title("Options")
+      .backgroundColor(Color.Blues_cornflowerblue)
+      .width(800)
+      .height(600))
 
   override def onBeforeInit(): Unit = {
 
@@ -78,7 +79,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
             case GLFW_KEY_L => rot_right_divisor = rot_right_divisor + 5.0f;
             case GLFW_KEY_K => rot_right_divisor = rot_right_divisor - 5.0f;
             case GLFW_KEY_H =>
-              //optionsWindow.open()
+              optionsWindow.open()
 
             case GLFW_KEY_SPACE =>
               if (animated) {
@@ -129,11 +130,11 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
     u_primary_scale = glGetUniformLocation(shader_prog, "u_primary_scale")
     u_rot_left_divisor = glGetUniformLocation(shader_prog, "u_rot_left_divisor")
     u_rot_right_divisor = glGetUniformLocation(shader_prog, "u_rot_right_divisor")
+
+    auxWindows.add(optionsWindow);
   }
 
   override def onRender(): Unit = {
-
-    //optionsWindow.onRender()
 
     if (animated) {
       last_rendered_timecode = glfwGetTime().toFloat - delta_timecode

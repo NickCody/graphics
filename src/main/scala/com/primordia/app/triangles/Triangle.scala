@@ -1,7 +1,7 @@
 package com.primordia.app.triangles
 
 import com.primordia.core.{AppFactory, ScalaApp}
-import com.primordia.model.AppContext
+import com.primordia.model.{AppContext, WindowParams}
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFW.glfwSwapBuffers
 import org.lwjgl.opengl.GL11._
@@ -9,7 +9,11 @@ import org.lwjgl.opengl.GL15._
 
 object Triangle {
   def main(args: Array[String]): Unit = {
-    new Triangle(AppFactory.createAppContext("Triangle")).run()
+    new Triangle(AppFactory.createAppContext(
+      WindowParams
+        .defaultWindowParams()
+        .title("Triangle")
+    )).run()
   }
 }
 

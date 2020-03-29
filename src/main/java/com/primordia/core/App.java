@@ -1,14 +1,21 @@
 package com.primordia.core;
 
 import com.primordia.model.AppContext;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GLUtil;
+import org.lwjgl.system.Callback;
+import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -26,9 +33,8 @@ public abstract class App {
     protected Integer mouseX = 0;
     protected Integer mouseY = 0;
     protected Double  currentSeconds = 0.0;
-
-    //protected Display display = new Display();
-
+    protected Display display = new Display();
+    protected List<SwtWindow> auxWindows = new ArrayList<SwtWindow>();
     protected abstract AppContext getAppContext();
 
     GLFWFramebufferSizeCallback sizeCallback = new GLFWFramebufferSizeCallback() {
@@ -52,13 +58,13 @@ public abstract class App {
         }
     };
 
+
     // Overrides
     public void onBeforeInit() {}
     public void onAfterInit() {}
     public void onExit() {}
     public void onProcessMessages() {};
     public abstract void onRender();
-
     private void internalInit() {
 
         glfwSetFramebufferSizeCallback(getAppContext().getWindow(), sizeCallback);
@@ -90,12 +96,8 @@ public abstract class App {
             glEnable(GL_MULTISAMPLE);
         }
 
-        glfwShowWindow(getAppContext().getWindow());
-
-        // nvidia insight said this was fairly expensive 150micros
-        // If we're only a single window (single thread?) this is probably fine.
-
         glfwMakeContextCurrent(getAppContext().getWindow());
+        glfwShowWindow(getAppContext().getWindow());
     }
 
     public void run() {
@@ -114,11 +116,16 @@ public abstract class App {
         while ( !glfwWindowShouldClose(getAppContext().getWindow()) ) {
             currentSeconds = glfwGetTime();
 
+            glfwMakeContextCurrent(getAppContext().getWindow());
             onRender();
 
+            for (SwtWindow swt : auxWindows) {
+                swt.onRender();
+            }
+
             // Process window messages (for both SWT _and_ GLFW)
-            //display.readAndDispatch();
-            glfwPollEvents();
+            display.readAndDispatch();
+            //glfwPollEvents();
 
             if (getAppContext().getWindowParams().getFullScreen() && GLFW_PRESS == glfwGetKey(getAppContext().getWindow(), GLFW_KEY_ESCAPE)) {
                 glfwSetWindowShouldClose(getAppContext().getWindow(), true);
@@ -130,7 +137,14 @@ public abstract class App {
             sizeCallback.free();
             cursorCallback.free();
             glfwDestroyWindow(getAppContext().getWindow());
-            //display.dispose();
+            display.dispose();
+
+            if (getAppContext().getErrCallback() != null)
+                getAppContext().getErrCallback().free();
+
+            if (getAppContext().getDebugMessageCallback() != null)
+                getAppContext().getDebugMessageCallback().free();
+
         } catch (Throwable t ){
             t.printStackTrace();
         } finally {
@@ -148,4 +162,11 @@ public abstract class App {
         );
     }
 
+    public Display getDisplay() {
+        return this.display;
+    }
+
+    public void addAuxWindow(SwtWindow sw) {
+        auxWindows.add(sw);
+    }
 }

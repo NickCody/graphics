@@ -94,7 +94,6 @@ public class GLHelpers {
 
         for(int shader : shaders) {
             glAttachShader(shader_prog, shader);
-            glAttachShader(shader_prog, shader);
         }
 
         glLinkProgram(shader_prog);

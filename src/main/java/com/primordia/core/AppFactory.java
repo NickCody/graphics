@@ -1,23 +1,23 @@
 package com.primordia.core;
 
 import com.primordia.model.AppContext;
-import com.primordia.model.Color;
 import com.primordia.model.WindowParams;
 import com.primordia.util.WindowIconLoader;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL.createCapabilities;
-
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLCapabilities;
+import org.lwjgl.opengl.GLUtil;
+import org.lwjgl.system.Callback;
+import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.IntBuffer;
 
-import static org.lwjgl.opengl.GL11.GL_TRUE;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL.createCapabilities;
 import static org.lwjgl.opengl.GL11.glGetIntegerv;
 import static org.lwjgl.opengl.GL30.GL_MAX_SAMPLES;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -25,13 +25,14 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class AppFactory {
 
     protected static Logger log = LoggerFactory.getLogger(AppFactory.class);
-    protected static GLFWErrorCallback errCallback;
-
-    public static AppContext createAppContext(String title) {
-        return AppFactory.createAppContext(WindowParams.defaultWindowParams().title(title));
-    }
 
     public static AppContext createAppContext(WindowParams windowParams) {
+        return createAppContext(windowParams, false);
+    }
+
+    public static AppContext createAppContext(WindowParams windowParams, Boolean debugMode) {
+        GLFWErrorCallback errCallback = null;
+        Callback debugMessageCallback = null;
 
         log.info("Creating AppContext with windowParams: " + windowParams.toString());
 
@@ -39,6 +40,7 @@ public class AppFactory {
 
         if (!glfwInit())
             throw new IllegalStateException("Unable to initialize GLFW");
+
 
         // Determine Max Multisamples
         //
@@ -78,10 +80,14 @@ public class AppFactory {
 
         GLCapabilities caps = createCapabilities();
 
+        if (debugMode) {
+            debugMessageCallback = GLUtil.setupDebugMessageCallback();
+        }
+
         log.info("OpenGL version: " + GL11.glGetString(GL11.GL_VERSION));
         log.info("GLCapabilities: " + caps.toString());
 
-        return new AppContext(window, caps, windowParams);
+        return new AppContext(window, caps, windowParams, errCallback, debugMessageCallback);
     }
 
     public static int determineMaxMultisamples() {
