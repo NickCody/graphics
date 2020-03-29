@@ -1,17 +1,12 @@
-package com.primordia.app
+package com.primordia.app.triangles
 
 import com.primordia.core.{AppFactory, ScalaApp}
-import com.primordia.model.{AppContext, Color, WindowParams}
-import org.lwjgl.BufferUtils
+import com.primordia.model.{AppContext, WindowParams}
+import com.primordia.util.GLHelpers
 import org.lwjgl.glfw.GLFW._
 import org.lwjgl.opengl.GL11._
-import org.lwjgl.opengl.GL15._
 import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL30._
-import org.lwjgl.system.MemoryUtil.NULL
-import com.primordia.conversions.GlImplicit._
-import com.primordia.util.GLHelpers
-import org.lwjgl.opengl.{GL, GL11, GLCapabilities}
 
 
 object ShaderTriangle {
@@ -22,8 +17,6 @@ object ShaderTriangle {
         WindowParams
           .defaultWindowParams()
           .title("ShaderTriangle")
-          .backgroundColor(Color.Black)
-          .multiSamples(8)
       ))
 
     app.run()

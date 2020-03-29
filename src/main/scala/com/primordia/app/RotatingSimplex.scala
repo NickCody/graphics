@@ -20,8 +20,6 @@ object RotatingSimplex {
           .defaultWindowParams()
           .title("LavaLamp")
           .backgroundColor(Color.Black)
-          .multiSamples(32)
-          .fullScreen(true)
       ))
 
     app.run()
@@ -43,8 +41,8 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
   var u_rotated_scale = 0
   var u_primary_scale = 0
-  var rotated_scale: Float = 0.02f
-  var primary_scale: Float = 0.002f
+  var rotated_scale: Float = 0.01f
+  var primary_scale: Float = 0.004f
 
   var u_rot_left_divisor = 0
   var u_rot_right_divisor = 0
@@ -52,7 +50,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
   var rot_right_divisor: Float = 23
 
   var u_animated = 0
-  var animated = false
+  var animated = true
   var last_rendered_timecode: Float =  glfwGetTime().toFloat
   var delta_timecode: Float = 0
   var vao = 0;

@@ -1,13 +1,11 @@
-package com.primordia.app
+package com.primordia.app.triangles
 
-import java.nio.{FloatBuffer, IntBuffer}
-
-import com.primordia.core.{App, AppFactory, ScalaApp}
-import com.primordia.model.{AppContext, Color, WindowParams}
+import com.primordia.core.{AppFactory, ScalaApp}
+import com.primordia.model.AppContext
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFW.glfwSwapBuffers
-import org.lwjgl.opengl.GL11.{GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, GL_FLOAT, GL_PROJECTION, GL_TRIANGLES, GL_UNSIGNED_INT, GL_VERTEX_ARRAY, glClear, glDrawElements, glEnableClientState, glLoadIdentity, glMatrixMode, glOrtho, glVertexPointer}
-import org.lwjgl.opengl.GL15.{GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, glBindBuffer, glBufferData, glGenBuffers}
+import org.lwjgl.opengl.GL11._
+import org.lwjgl.opengl.GL15._
 
 object Triangle {
   def main(args: Array[String]): Unit = {

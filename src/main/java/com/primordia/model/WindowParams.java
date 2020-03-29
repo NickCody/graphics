@@ -2,11 +2,11 @@ package com.primordia.model;
 
 public class WindowParams {
     private String title = "App";
-    private Integer width = 1920;
-    private Integer height = 1080;
+    private Integer width = 960;
+    private Integer height = 540;
     private Color backgroundColor = Color.Whites_whitesmoke;
     private String[] icons = new String[]{"Green32x32.png", "Green64x64.png"};
-    private int multiSamples = 4;
+    private int multiSamples = 8;
     private boolean fullScreen = System.getProperty("fullscreen", "false").equals("true");
 
     public static WindowParams defaultWindowParams() {

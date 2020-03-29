@@ -1,7 +1,6 @@
 package com.primordia.core;
 
 import com.primordia.model.AppContext;
-import org.eclipse.swt.widgets.Display;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -61,6 +60,7 @@ public abstract class App {
     public abstract void onRender();
 
     private void internalInit() {
+
         glfwSetFramebufferSizeCallback(getAppContext().getWindow(), sizeCallback);
         glfwSetCursorPosCallback(getAppContext().getWindow(), cursorCallback);
 
@@ -69,10 +69,11 @@ public abstract class App {
                 getAppContext().getWindowParams().getBackgroundColor().getGreen(),
                 getAppContext().getWindowParams().getBackgroundColor().getBlue(),
                 getAppContext().getWindowParams().getBackgroundColor().getAlpha());
+
         glEnable(GL_DEPTH_TEST);
 
 
-        if (!getAppContext().getWindowParams().getFullScreen()) {
+        if (getAppContext().getWindowParams().getFullScreen()) {
             makeFullScreen();
         }
 
@@ -146,14 +147,4 @@ public abstract class App {
         );
     }
 
-    public void makeWindowed() {
-        GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-        glfwSetWindowPos(
-                getAppContext().getWindow(),
-                (vidmode.width() - getAppContext().getWindowParams().getWidth()) / 2,
-                (vidmode.height() - getAppContext().getWindowParams().getHeight()) / 2
-        );
-
-    }
 }

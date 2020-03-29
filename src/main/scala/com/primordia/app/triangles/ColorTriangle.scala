@@ -1,6 +1,4 @@
-package com.primordia.app
-
-import java.nio.{Buffer, FloatBuffer}
+package com.primordia.app.triangles
 
 import com.primordia.core.{AppFactory, ScalaApp}
 import com.primordia.model.{AppContext, Color, WindowParams}
@@ -8,7 +6,7 @@ import com.primordia.util.GLHelpers
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFW._
 import org.lwjgl.opengl.GL11._
-import org.lwjgl.opengl.GL15.{GL_ARRAY_BUFFER, GL_STATIC_DRAW, glBindBuffer, glBufferData, glGenBuffers, glIsBuffer}
+import org.lwjgl.opengl.GL15._
 import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL30._
 
@@ -21,7 +19,6 @@ object ColorTriangle {
           .defaultWindowParams()
           .title("ColorTriangle")
           .backgroundColor(Color.Black)
-          .multiSamples(8)
       ))
 
     app.run()

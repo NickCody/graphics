@@ -1,5 +1,9 @@
 #version 400
 
+const float PI = 3.1415926535897932384626433832795;
+const float PI_2 = 1.57079632679489661923;
+const float PI_4 = 0.785398163397448309616;
+
 uniform float u_time;
 uniform vec2 u_resolution;
 uniform float u_rotated_scale;
@@ -99,6 +103,9 @@ vec2 rotateOrigin(vec2 v, vec2 center, float a) {
 }
 
 void main() {
+    vec3 white = vec3(1.0, 1.0, 1.0);
+    vec3 black = vec3(0.0, 0.0, 0.0);
+
     vec2 rotated_resolution = u_resolution.xy * u_rotated_scale;
     vec2 primary_resolution = u_resolution.xy * u_primary_scale;
 
@@ -108,22 +115,22 @@ void main() {
     vec2 rotated_center = rotated_resolution.xy/2.0;
     vec2 primary_center = primary_resolution.xy/2.0;
 
-    vec2 r0 = primary_fragCoord+primary_center;
-    vec2 r1 = rotateOrigin(rotated_fragCoord, rotated_center, u_time/u_rot_left_divisor);
-    vec2 r2 = rotateOrigin(rotated_fragCoord, rotated_center, u_time/u_rot_right_divisor);
+    vec2 coord0 = primary_fragCoord+primary_center;
+    vec2 coord1 = rotateOrigin(rotated_fragCoord, rotated_center, u_time/u_rot_left_divisor);
+    vec2 coord2 = rotateOrigin(rotated_fragCoord, rotated_center, u_time/u_rot_right_divisor);
 
-    float rn0 = snoise(r0);
-    float rn1 = snoise(r1);
-    float rn2 = snoise(r2);
-    float c = (rn1 + rn2)/2.0;
+    float n0 = snoise(coord0);
+    float n1 = snoise(coord1);
+    float n2 = snoise(coord2);
+    float c = (n1 + n2)/2.0;
 
-    float n = snoise(r0 * c);
+    float n = snoise(coord0 * c);
 
-    float r = abs(cos(u_time/u_rot_left_divisor)) * n;
-    float g = abs(sin(u_time/u_rot_right_divisor)) * n;
-    float b = abs(sin(-u_time)) * n;
+    float r = n;
+    float g = n;
+    float b = n;
+    vec3 color = vec3(r, g, b);
+    vec3 final_color = color;
 
-    vec3 nc = vec3(r, g, b);
-
-    frag_color = vec4(nc, 1.0);
+    frag_color = vec4(final_color, 1.0);
 }

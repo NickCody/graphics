@@ -23,8 +23,6 @@ object FragmentShaderTest {
         WindowParams
           .defaultWindowParams()
           .title(fragmentShader)
-          .backgroundColor(Color.Black)
-        //.multiSamples(8)
       ))
 
     app.run()
