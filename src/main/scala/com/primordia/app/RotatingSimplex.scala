@@ -18,8 +18,9 @@ object RotatingSimplex {
       AppFactory.createAppContext(
         WindowParams
           .defaultWindowParams()
-          .title("LavaLamp")
+          .title("Rotating Simplex Noise")
           .backgroundColor(Color.Black)
+          .multiSamples(Int.MaxValue)
       ))
 
     app.run()

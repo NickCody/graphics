@@ -89,7 +89,6 @@ public class AppFactory {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
-        long mon = glfwGetPrimaryMonitor();
         long window = glfwCreateWindow(2, 2, "multisample", NULL, NULL);
 
         if (window == NULL)

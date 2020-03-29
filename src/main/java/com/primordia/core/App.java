@@ -72,7 +72,6 @@ public abstract class App {
 
         glEnable(GL_DEPTH_TEST);
 
-
         if (getAppContext().getWindowParams().getFullScreen()) {
             makeFullScreen();
         }
@@ -87,7 +86,9 @@ public abstract class App {
         // Enable v-sync
         glfwSwapInterval(1);
 
-        glEnable(GL_MULTISAMPLE);
+        if (getAppContext().getWindowParams().getMultiSamples() > 1) {
+            glEnable(GL_MULTISAMPLE);
+        }
 
         glfwShowWindow(getAppContext().getWindow());
 
