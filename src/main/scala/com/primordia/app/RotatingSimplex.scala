@@ -1,12 +1,16 @@
 package com.primordia.app
 
-import com.primordia.core.{AppFactory, ScalaApp, SwtWindow}
+import com.primordia.core.{App, AppFactory, ScalaApp, SwtWindow}
 import com.primordia.model.{AppContext, Color, WindowParams}
 import org.lwjgl.glfw.GLFW._
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL20._
 import org.lwjgl.opengl.GL30._
 import com.primordia.util.GLHelpers
+import org.eclipse.swt.events.{SelectionEvent, SelectionListener}
+import org.eclipse.swt.graphics.Rectangle
+import org.eclipse.swt.layout.GridLayout
+import org.eclipse.swt.widgets.{Composite, Control, Event, Listener, Scale}
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFWKeyCallback
 import org.lwjgl.opengl.GL15.{GL_ARRAY_BUFFER, GL_STATIC_DRAW, glBindBuffer, glBufferData, glGenBuffers, glIsBuffer}
@@ -29,6 +33,59 @@ object RotatingSimplex {
 }
 
 class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
+  protected class MappedScale(scale: Scale, start: Float, stop: Float){
+    def getScaledSelection: Float = {
+      val controlRange = scale.getMaximum - scale.getMinimum
+      val continuousRange = stop - start
+      val rangeSel = (scale.getSelection.toFloat - scale.getMinimum.toFloat)/controlRange.toFloat
+      rangeSel/continuousRange + start
+    }
+
+    def setScaledSelection(pos: Float): Unit = {
+      val controlRange = scale.getMaximum - scale.getMinimum
+      val continuousRange = stop - start
+
+      val p = (pos-start)/continuousRange
+      scale.setSelection((p*controlRange).toInt + scale.getMinimum)
+    }
+  }
+  protected class OptionsWindow(app: RotatingSimplex, windowParams: WindowParams) extends SwtWindow(app, windowParams) {
+
+    import org.eclipse.swt.SWT
+    import org.eclipse.swt.widgets.Text
+    val clientArea: Rectangle = shell.getClientArea
+
+    val gridLayout = new GridLayout()
+    gridLayout.numColumns = 2
+    swtCanvas.setLayout(gridLayout)
+
+    new Text(swtCanvas, SWT.SINGLE).setText("Rotated Scale")
+    val rotatedScale = new Scale(swtCanvas, SWT.PUSH)
+    val rotatedScaleMapped = new MappedScale(rotatedScale, 0.01f, .1f)
+    rotatedScale.setBounds(clientArea.x, clientArea.y, clientArea.width, 64)
+    rotatedScale.setMinimum(1)
+    rotatedScale.setMaximum(20)
+    rotatedScale.setPageIncrement(5)
+    rotatedScaleMapped.setScaledSelection(app.getRotatedScale)
+    rotatedScale.addSelectionListener(new SelectionListener {
+      override def widgetSelected(e: SelectionEvent): Unit = {
+        app.setRotatedScale(rotatedScaleMapped.getScaledSelection)
+      }
+
+      override def widgetDefaultSelected(e: SelectionEvent): Unit = {}
+    } )
+
+    new Text(swtCanvas, SWT.SINGLE).setText("Primary Scale")
+    val primaryScale = new Scale(swtCanvas, SWT.PUSH)
+    primaryScale.setBounds(clientArea.x, clientArea.y, clientArea.width, 64)
+    primaryScale.setMinimum(1)
+    primaryScale.setMaximum(100)
+    primaryScale.setPageIncrement(5)
+
+    swtCanvas.pack()
+
+
+  }
 
   private val points: Array[Float] = Array(
     -1.0f,  1.0f,  0.0f,
@@ -43,7 +100,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
   var u_rotated_scale = 0
   var u_primary_scale = 0
-  var rotated_scale: Float = 0.01f
+  var rotated_scale: Float = 0.02f
   var primary_scale: Float = 0.004f
 
   var u_rot_left_divisor = 0
@@ -57,10 +114,10 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
   var delta_timecode: Float = 0
   var vao = 0;
 
-  val optionsWindow = new SwtWindow(this,
+  val optionsWindow = new OptionsWindow(this,
     WindowParams.defaultWindowParams()
       .title("Options")
-      .backgroundColor(Color.Blues_cornflowerblue)
+      .backgroundColor(Color.White)
       .width(800)
       .height(600))
 
@@ -175,5 +232,11 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
   override def onExit(): Unit = {
     //optionsWindow.close()
+  }
+
+  def getRotatedScale: Float = rotated_scale
+
+  def setRotatedScale(newScale: Float): Unit = {
+    rotated_scale = newScale
   }
 }

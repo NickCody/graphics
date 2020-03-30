@@ -102,6 +102,7 @@ vec2 rotateOrigin(vec2 v, vec2 center, float a) {
     return r + center;
 }
 
+
 void main() {
     vec3 white = vec3(1.0, 1.0, 1.0);
     vec3 black = vec3(0.0, 0.0, 0.0);

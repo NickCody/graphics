@@ -123,9 +123,9 @@ public abstract class App {
                 swt.onRender();
             }
 
-            // Process window messages (for both SWT _and_ GLFW)
+            glfwMakeContextCurrent(getAppContext().getWindow());
+
             display.readAndDispatch();
-            //glfwPollEvents();
 
             if (getAppContext().getWindowParams().getFullScreen() && GLFW_PRESS == glfwGetKey(getAppContext().getWindow(), GLFW_KEY_ESCAPE)) {
                 glfwSetWindowShouldClose(getAppContext().getWindow(), true);
@@ -133,10 +133,16 @@ public abstract class App {
         }
 
         try {
+
             onExit();
             sizeCallback.free();
             cursorCallback.free();
             glfwDestroyWindow(getAppContext().getWindow());
+
+            for (SwtWindow swt : auxWindows) {
+                swt.close();
+            }
+
             display.dispose();
 
             if (getAppContext().getErrCallback() != null)
