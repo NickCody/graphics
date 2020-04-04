@@ -16,6 +16,8 @@ import org.lwjgl.opengl.GL30._
 //
 object FragmentShaderTest {
   val fragmentShader: String = System.getProperty("fragmentShader", "shaders/ColorPulse.frag" )
+  val multiSample: Int = System.getProperty("multiSample", "32" ).toInt
+
   def main(args: Array[String]): Unit = {
 
     val app = new FragmentShaderTest(
@@ -23,6 +25,9 @@ object FragmentShaderTest {
         WindowParams
           .defaultWindowParams()
           .title(fragmentShader)
+          .multiSamples(multiSample)
+          .width(1200)
+          .height(1200)
       ))
 
     app.run()
@@ -39,8 +44,9 @@ class FragmentShaderTest(override val appContext: AppContext) extends ScalaApp {
     )
 
   var shader_prog: Int = 0
-  var u_time = 0
-  var u_resolution = 0
+  var iTime = 0
+  var iResolution = 0
+  var iMouse = 0
   var vao = 0;
 
   override def onBeforeInit(): Unit = {
@@ -71,15 +77,16 @@ class FragmentShaderTest(override val appContext: AppContext) extends ScalaApp {
 
     // Uniform setup
     //
-    u_time = glGetUniformLocation(shader_prog, "u_time")
-    u_resolution = glGetUniformLocation(shader_prog, "u_resolution")
-
+    iTime = glGetUniformLocation(shader_prog, "iTime")
+    iResolution = glGetUniformLocation(shader_prog, "iResolution")
+    iMouse = glGetUniformLocation(shader_prog, "iMouse")
   }
 
   override def onRender(): Unit = {
 
-    glUniform1f(u_time, glfwGetTime().toFloat);
-    glUniform2f(u_resolution, windowWidth.toFloat, windowHeight.toFloat)
+    glUniform1f(iTime, glfwGetTime().toFloat);
+    glUniform2f(iResolution, windowWidth.toFloat, windowHeight.toFloat)
+    glUniform2f(iMouse, mouseX.toFloat, windowHeight - mouseY.toFloat)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
