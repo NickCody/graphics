@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL30._
 //
 object FragmentShaderTest {
   val fragmentShader: String = System.getProperty("fragmentShader", "shaders/ColorPulse.frag" )
-  val multiSample: Int = System.getProperty("multiSample", "32" ).toInt
+  val multiSample: Int = System.getProperty("multiSample", "4" ).toInt
 
   def main(args: Array[String]): Unit = {
 
@@ -28,6 +28,7 @@ object FragmentShaderTest {
           .multiSamples(multiSample)
           .width(1200)
           .height(1200)
+          .fullScreen(true)
       ))
 
     app.run()

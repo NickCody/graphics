@@ -6,6 +6,10 @@ uniform vec2 iMouse;
 
 out vec4 out_color;
 
+//
+// Shadertoy Start
+//
+
 const float E = 2.7182818284590452353602875;
 
 float sigmoid(float x) {
@@ -35,16 +39,24 @@ float test(vec2 coord, vec2 center, float radius, float thickness, float sharpne
         return sigmoidToFalloff(sigmoid((d1-thickness)*sharpness));
 }
 
-void main() {
+void mainImage(out vec4 out_color, vec2 fragCoord) {
     vec3 white = vec3(1.0, 1.0, 1.0);
     vec3 black = vec3(0.0, 0.0, 0.0);
     float scale = 1.0;
     float radius = iResolution.x/5.0;
 
     vec2 center = (iResolution.xy * scale)/2.0;
-    vec2 st = (gl_FragCoord.xy * scale);
+    vec2 st = (fragCoord.xy * scale);
     float thickness = iMouse.y/iResolution.y * 30.0 * scale;
     float sharpness = iMouse.x/iResolution.x * scale;
     float t = test(st, center, radius, thickness, sharpness);
     out_color = vec4( mix(white, black, t), 1.0);
+}
+
+//
+// Shadertoy End
+//
+
+void main() {
+    mainImage(out_color, gl_FragCoord.xy);
 }
