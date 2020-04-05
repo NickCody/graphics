@@ -1,7 +1,7 @@
-package com.primordia.core;
+package com.primordia.graphics.core;
 
-import com.primordia.model.AppContext;
-import com.primordia.model.WindowParams;
+import com.primordia.graphics.model.AppContext;
+import com.primordia.graphics.model.WindowParams;
 import com.primordia.util.WindowIconLoader;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.opengl.GLUtil;
 import org.lwjgl.system.Callback;
-import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,14 +1,10 @@
-package com.primordia.core;
+package com.primordia.graphics.core;
 
-import com.primordia.model.AppContext;
+import com.primordia.graphics.model.AppContext;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GLUtil;
-import org.lwjgl.system.Callback;
-import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

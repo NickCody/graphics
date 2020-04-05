@@ -1,7 +1,7 @@
-package com.primordia.app
+package com.primordia.graphics.app
 
-import com.primordia.core.{App, AppFactory, ScalaApp, SwtWindow}
-import com.primordia.model.{AppContext, Color, WindowParams}
+import com.primordia.graphics.core.{App, AppFactory, ScalaApp, SwtWindow}
+import com.primordia.graphics.model.{AppContext, Color, WindowParams}
 import org.lwjgl.glfw.GLFW._
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL20._
@@ -18,15 +18,19 @@ import org.lwjgl.opengl.GL15.{GL_ARRAY_BUFFER, GL_STATIC_DRAW, glBindBuffer, glB
 
 object RotatingSimplex {
   def main(args: Array[String]): Unit = {
+
+    val windowParams = WindowParams
+      .defaultWindowParams()
+      .title("Rotating Simplex Noise")
+      .backgroundColor(Color.Black)
+      .multiSamples(Int.MaxValue)
+      .fullScreen(false)
+      .width(1920)
+      .height(1080)
+
     val app = new RotatingSimplex(
-      AppFactory.createAppContext(
-        WindowParams
-          .defaultWindowParams()
-          .title("Rotating Simplex Noise")
-          .backgroundColor(Color.Black)
-          .multiSamples(Int.MaxValue),
-        true
-      ))
+      AppFactory.createAppContext(windowParams, true)
+    )
 
     app.run()
   }
@@ -49,6 +53,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
       scale.setSelection((p*controlRange).toInt + scale.getMinimum)
     }
   }
+
   protected class OptionsWindow(app: RotatingSimplex, windowParams: WindowParams) extends SwtWindow(app, windowParams) {
 
     import org.eclipse.swt.SWT
@@ -95,18 +100,21 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
     )
 
   var shader_prog: Int = 0
-  var u_time = 0
-  var u_resolution = 0
+  var iTime = 0
+  var iResolution = 0
 
   var u_rotated_scale = 0
   var u_primary_scale = 0
-  var rotated_scale: Float = 0.02f
-  var primary_scale: Float = 0.004f
+  var rotated_scale: Float = 0.01f
+  var primary_scale: Float = 0.01f
 
-  var u_rot_left_divisor = 0
-  var u_rot_right_divisor = 0
-  var rot_left_divisor: Float = 17
-  var rot_right_divisor: Float = 23
+  var u_timescale = 0
+  var timescale = 0.1f
+
+  var u_rot_left_timescale = 0
+  var u_rot_right_timescale = 0
+  var rot_left_timescale: Float = 0.1f
+  var rot_right_timescale: Float = -0.1f
 
   var u_animated = 0
   var animated = true
@@ -122,6 +130,8 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
       .height(600))
 
   override def onBeforeInit(): Unit = {
+    log.info("Dumping initial parameters: ")
+    dumpParameters()
 
     val keyCallback = new GLFWKeyCallback() {
       override def invoke(window: Long, key: Int, scancode: Int, action: Int, mods: Int): Unit = {
@@ -131,10 +141,13 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
             case GLFW_KEY_R => rotated_scale = rotated_scale * 2.0f
             case GLFW_KEY_O => primary_scale = primary_scale / 2.0f
             case GLFW_KEY_P => primary_scale = primary_scale * 2.0f
-            case GLFW_KEY_F => rot_left_divisor = rot_left_divisor + 5.0f;
-            case GLFW_KEY_D => rot_left_divisor = rot_left_divisor - 5.0f;
-            case GLFW_KEY_L => rot_right_divisor = rot_right_divisor + 5.0f;
-            case GLFW_KEY_K => rot_right_divisor = rot_right_divisor - 5.0f;
+            case GLFW_KEY_D => rot_left_timescale = rot_left_timescale / 2.0f;
+            case GLFW_KEY_F => rot_left_timescale = Math.max(0.001f, rot_left_timescale * 2.0f);
+            case GLFW_KEY_K => rot_right_timescale = rot_right_timescale / 2.0f;
+            case GLFW_KEY_L => rot_right_timescale = Math.max(0.001f, rot_right_timescale * 2.0f);
+            case GLFW_KEY_X => timescale = timescale / 2.0f;
+            case GLFW_KEY_C => timescale = Math.max(0.001f, timescale * 2.0f);
+
             case GLFW_KEY_H =>
               optionsWindow.open()
 
@@ -181,12 +194,13 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
     // Uniform setup
     //
-    u_resolution = glGetUniformLocation(shader_prog, "u_resolution")
-    u_time = glGetUniformLocation(shader_prog, "u_time")
+    iResolution = glGetUniformLocation(shader_prog, "iResolution")
+    iTime = glGetUniformLocation(shader_prog, "iTime")
     u_rotated_scale = glGetUniformLocation(shader_prog, "u_rotated_scale")
     u_primary_scale = glGetUniformLocation(shader_prog, "u_primary_scale")
-    u_rot_left_divisor = glGetUniformLocation(shader_prog, "u_rot_left_divisor")
-    u_rot_right_divisor = glGetUniformLocation(shader_prog, "u_rot_right_divisor")
+    u_timescale = glGetUniformLocation(shader_prog, "u_timescale")
+    u_rot_left_timescale = glGetUniformLocation(shader_prog, "u_rot_left_timescale")
+    u_rot_right_timescale = glGetUniformLocation(shader_prog, "u_rot_right_timescale")
 
     auxWindows.add(optionsWindow);
   }
@@ -197,12 +211,13 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
       last_rendered_timecode = glfwGetTime().toFloat - delta_timecode
     }
 
-    glUniform1f(u_time, last_rendered_timecode );
-    glUniform2f(u_resolution, windowWidth.toFloat, windowHeight.toFloat)
+    glUniform1f(iTime, last_rendered_timecode );
+    glUniform2f(iResolution, windowWidth.toFloat, windowHeight.toFloat)
+    glUniform1f(u_timescale, timescale)
     glUniform1f(u_rotated_scale, rotated_scale);
     glUniform1f(u_primary_scale, primary_scale);
-    glUniform1f(u_rot_left_divisor, rot_left_divisor);
-    glUniform1f(u_rot_right_divisor, rot_right_divisor);
+    glUniform1f(u_rot_left_timescale, rot_left_timescale);
+    glUniform1f(u_rot_right_timescale, rot_right_timescale);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
@@ -220,8 +235,9 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
         | =-=-=-=-=-=-=-=--=-
         |rotated_scale          = $rotated_scale
         |primary_scale          = $primary_scale
-        |rot_left_divisor       = $rot_left_divisor
-        |rot_right_divisor      = $rot_right_divisor
+        |timescale              = $timescale
+        |rot_left_timescale     = $rot_left_timescale
+        |rot_right_timescale    = $rot_right_timescale
         |
         |delta_timecode         = $delta_timecode
         |last_rendered_timecode = $last_rendered_timecode

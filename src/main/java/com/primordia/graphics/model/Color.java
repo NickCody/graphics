@@ -1,6 +1,4 @@
-package com.primordia.model;
-
-import scala.math.Ordering;
+package com.primordia.graphics.model;
 
 public class Color {
     private Float r;

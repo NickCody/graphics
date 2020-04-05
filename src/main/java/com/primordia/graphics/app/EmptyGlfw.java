@@ -1,4 +1,4 @@
-package com.primordia.app;
+package com.primordia.graphics.app;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;

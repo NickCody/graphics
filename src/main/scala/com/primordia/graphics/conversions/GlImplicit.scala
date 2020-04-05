@@ -1,4 +1,4 @@
-package com.primordia.conversions
+package com.primordia.graphics.conversions
 
 import org.lwjgl.opengl.GL11.GL_TRUE
 

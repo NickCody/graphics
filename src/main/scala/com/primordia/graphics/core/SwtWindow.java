@@ -1,11 +1,10 @@
-package com.primordia.core;
+package com.primordia.graphics.core;
 
-import com.primordia.model.WindowParams;
+import com.primordia.graphics.model.WindowParams;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.opengl.GLCanvas;
 import org.eclipse.swt.opengl.GLData;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;

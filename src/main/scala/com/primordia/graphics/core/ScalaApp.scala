@@ -1,6 +1,6 @@
-package com.primordia.core
+package com.primordia.graphics.core
 
-import com.primordia.model.AppContext
+import com.primordia.graphics.model.AppContext
 
 trait ScalaApp extends App {
 

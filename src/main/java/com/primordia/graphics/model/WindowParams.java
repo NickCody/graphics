@@ -1,4 +1,4 @@
-package com.primordia.model;
+package com.primordia.graphics.model;
 
 public class WindowParams {
     private String title = "App";

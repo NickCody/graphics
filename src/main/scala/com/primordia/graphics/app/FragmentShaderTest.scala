@@ -1,7 +1,7 @@
-package com.primordia.app
+package com.primordia.graphics.app
 
-import com.primordia.core.{AppFactory, ScalaApp}
-import com.primordia.model.{AppContext, Color, WindowParams}
+import com.primordia.graphics.core.{AppFactory, ScalaApp}
+import com.primordia.graphics.model.{AppContext, Color, WindowParams}
 import com.primordia.util.GLHelpers
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFW._
@@ -56,13 +56,13 @@ class FragmentShaderTest(override val appContext: AppContext) extends ScalaApp {
     glBindBuffer(GL_ARRAY_BUFFER, vbo_points)
     val fb_points = BufferUtils.createFloatBuffer(points.length).put(points)
     glBufferData(GL_ARRAY_BUFFER, fb_points.flip, GL_STATIC_DRAW)
+
     if (!glIsBuffer(vbo_points)) throw new RuntimeException("vbo_points is not a buffer!")
 
     vao = glGenVertexArrays();
     glBindVertexArray(vao);
-    if (!glIsVertexArray(vao)) {
-      throw new RuntimeException("vao is not a vertex array!");
-    }
+
+    if (!glIsVertexArray(vao)) throw new RuntimeException("vao is not a vertex array!");
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_points);
     glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0L);

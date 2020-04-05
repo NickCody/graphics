@@ -1,7 +1,7 @@
-package com.primordia.app.triangles
+package com.primordia.graphics.app.triangles
 
-import com.primordia.core.{AppFactory, ScalaApp}
-import com.primordia.model.{AppContext, Color, WindowParams}
+import com.primordia.graphics.core.{AppFactory, ScalaApp}
+import com.primordia.graphics.model.{AppContext, Color, WindowParams}
 import com.primordia.util.GLHelpers
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFW._

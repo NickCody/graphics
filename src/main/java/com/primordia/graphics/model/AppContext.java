@@ -1,4 +1,4 @@
-package com.primordia.model;
+package com.primordia.graphics.model;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GLCapabilities;
