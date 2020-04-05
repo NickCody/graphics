@@ -11,6 +11,7 @@ uniform float u_primary_scale;
 uniform float u_rot_left_timescale;
 uniform float u_rot_right_timescale;
 uniform float u_timescale;
+uniform int   u_showComponents;
 
 layout(origin_upper_left) in vec4 gl_FragCoord;
 
@@ -182,7 +183,8 @@ void main() {
     vec2 rotated_fragCoord = gl_FragCoord.xy * u_rotated_scale;
     vec2 primary_fragCoord = gl_FragCoord.xy * u_primary_scale;
 
-    vec2 rotated_center = rotated_resolution.xy/2.0;
+    vec2 left_rotated_center = rotated_resolution.xy/4.0;
+    vec2 right_rotated_center = 3.0 * rotated_resolution.xy/4.0;
     vec2 primary_center = primary_resolution.xy/2.0;
 
     float time3d     = iTime * u_timescale;
@@ -190,23 +192,28 @@ void main() {
     float timeRight  = iTime * u_rot_right_timescale;
 
     vec3 coord0 = vec3( primary_fragCoord+primary_center, time3d);
-    vec3 coord1 = vec3( rotateOrigin(rotated_fragCoord, rotated_center, timeLeft), time3d);
-    vec3 coord2 = vec3( rotateOrigin(rotated_fragCoord, rotated_center, timeRight), time3d);
+    vec3 coord1 = vec3( rotateOrigin(rotated_fragCoord, left_rotated_center, timeLeft), time3d);
+    vec3 coord2 = vec3( rotateOrigin(rotated_fragCoord, right_rotated_center, timeRight), time3d);
 
     float n0 = snoise3d(coord0);
     float n1 = snoise3d(coord1);
     float n2 = snoise3d(coord2);
-    float c = (n1 + n2)/2.0;
 
-    float n = snoise3d(coord0 * c);
+    vec3 color;
 
-    float r = n;
-    float g = n;
-    float b = n;
+    if (u_showComponents == 0) {
+        float brighten = 1.5;
+        float c = (n1+n2)/2.0;
+        float n = snoise3d(coord0 * c);
 
-    vec3 color = mix(vec3(r, g, b), white, c);
+        float r = min(1.0, n * brighten);
+        float g = min(1.0, n * brighten);
+        float b = min(1.0, n * brighten);
 
-    vec3 final_color = color;
+        color = vec3(r, g, b);
+    } else {
+        color = vec3(n0, n1, n2);
+    }
 
-    frag_color = vec4(final_color, 1.0);
+    frag_color = vec4(color, 1.0);
 }

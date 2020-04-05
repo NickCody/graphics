@@ -118,6 +118,11 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
   var u_animated = 0
   var animated = true
+
+  var u_showComponents = 0
+  var showComponents = 0
+
+
   var last_rendered_timecode: Float =  glfwGetTime().toFloat
   var delta_timecode: Float = 0
   var vao = 0;
@@ -147,6 +152,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
             case GLFW_KEY_L => rot_right_timescale = Math.max(0.001f, rot_right_timescale * 2.0f);
             case GLFW_KEY_X => timescale = timescale / 2.0f;
             case GLFW_KEY_C => timescale = Math.max(0.001f, timescale * 2.0f);
+            case GLFW_KEY_Z => showComponents = if (showComponents == 0) 1 else 0
 
             case GLFW_KEY_H =>
               optionsWindow.open()
@@ -196,6 +202,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
     //
     iResolution = glGetUniformLocation(shader_prog, "iResolution")
     iTime = glGetUniformLocation(shader_prog, "iTime")
+    u_showComponents = glGetUniformLocation(shader_prog, "u_showComponents")
     u_rotated_scale = glGetUniformLocation(shader_prog, "u_rotated_scale")
     u_primary_scale = glGetUniformLocation(shader_prog, "u_primary_scale")
     u_timescale = glGetUniformLocation(shader_prog, "u_timescale")
@@ -214,10 +221,11 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
     glUniform1f(iTime, last_rendered_timecode );
     glUniform2f(iResolution, windowWidth.toFloat, windowHeight.toFloat)
     glUniform1f(u_timescale, timescale)
-    glUniform1f(u_rotated_scale, rotated_scale);
-    glUniform1f(u_primary_scale, primary_scale);
-    glUniform1f(u_rot_left_timescale, rot_left_timescale);
-    glUniform1f(u_rot_right_timescale, rot_right_timescale);
+    glUniform1i(u_showComponents, showComponents)
+    glUniform1f(u_rotated_scale, rotated_scale)
+    glUniform1f(u_primary_scale, primary_scale)
+    glUniform1f(u_rot_left_timescale, rot_left_timescale)
+    glUniform1f(u_rot_right_timescale, rot_right_timescale)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
