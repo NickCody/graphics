@@ -17,6 +17,9 @@ import org.lwjgl.opengl.GL15.{GL_ARRAY_BUFFER, GL_STATIC_DRAW, glBindBuffer, glB
 
 
 object RotatingSimplex {
+  val fragmentShader: String = System.getProperty("fragmentShader", "shaders/perlin-noise/RotatingSimplex.frag" )
+  val multiSample: Int = System.getProperty("multiSample", "4" ).toInt
+
   def main(args: Array[String]): Unit = {
 
     val windowParams = WindowParams
@@ -102,6 +105,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
   var shader_prog: Int = 0
   var iTime = 0
   var iResolution = 0
+  var iMouse = 0
 
   var u_rotated_scale = 0
   var u_primary_scale = 0
@@ -194,7 +198,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
     // Shader Setup
     //
     val vs = GLHelpers.generateVertexShader(GLHelpers.loadResource("shaders/SimplePosition.vert"))
-    val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource("shaders/perlin-noise/RotatingSimplex.frag"));
+    val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource(RotatingSimplex.fragmentShader));
     shader_prog = GLHelpers.createShaderProgram(List(vs, fs).toArray)
     glUseProgram(shader_prog)
 
@@ -202,6 +206,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
     //
     iResolution = glGetUniformLocation(shader_prog, "iResolution")
     iTime = glGetUniformLocation(shader_prog, "iTime")
+    iMouse = glGetUniformLocation(shader_prog, "iMouse")
     u_showComponents = glGetUniformLocation(shader_prog, "u_showComponents")
     u_rotated_scale = glGetUniformLocation(shader_prog, "u_rotated_scale")
     u_primary_scale = glGetUniformLocation(shader_prog, "u_primary_scale")
@@ -220,6 +225,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
     glUniform1f(iTime, last_rendered_timecode );
     glUniform2f(iResolution, windowWidth.toFloat, windowHeight.toFloat)
+    glUniform2f(iMouse, mouseX.toFloat, windowHeight - mouseY.toFloat)
     glUniform1f(u_timescale, timescale)
     glUniform1i(u_showComponents, showComponents)
     glUniform1f(u_rotated_scale, rotated_scale)

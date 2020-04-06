@@ -6,6 +6,7 @@ const float PI_4 = 0.785398163397448309616;
 
 uniform float iTime;
 uniform vec2 iResolution;
+uniform vec2 iMouse;
 uniform float u_rotated_scale;
 uniform float u_primary_scale;
 uniform float u_rot_left_timescale;
@@ -15,7 +16,7 @@ uniform int   u_showComponents;
 
 layout(origin_upper_left) in vec4 gl_FragCoord;
 
-out vec4 frag_color;
+out vec4 out_color;
 
 //
 // Description : Array and textureless GLSL 2D simplex noise function.
@@ -159,6 +160,7 @@ float snoise3d(vec3 v){
 }
 
 
+
 vec2 rotate(vec2 v, float a) {
     float s = sin(a);
     float c = cos(a);
@@ -172,16 +174,16 @@ vec2 rotateOrigin(vec2 v, vec2 center, float a) {
     return r + center;
 }
 
-
-void main() {
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
     vec3 white = vec3(1.0, 1.0, 1.0);
     vec3 black = vec3(0.0, 0.0, 0.0);
 
     vec2 rotated_resolution = iResolution.xy * u_rotated_scale;
     vec2 primary_resolution = iResolution.xy * u_primary_scale;
 
-    vec2 rotated_fragCoord = gl_FragCoord.xy * u_rotated_scale;
-    vec2 primary_fragCoord = gl_FragCoord.xy * u_primary_scale;
+    vec2 rotated_fragCoord = fragCoord.xy * u_rotated_scale;
+    vec2 primary_fragCoord = fragCoord.xy * u_primary_scale;
 
     vec2 left_rotated_center = rotated_resolution.xy/4.0;
     vec2 right_rotated_center = 3.0 * rotated_resolution.xy/4.0;
@@ -191,29 +193,36 @@ void main() {
     float timeLeft   = iTime * u_rot_left_timescale;
     float timeRight  = iTime * u_rot_right_timescale;
 
-    vec3 coord0 = vec3( primary_fragCoord+primary_center, time3d);
-    vec3 coord1 = vec3( rotateOrigin(rotated_fragCoord, left_rotated_center, timeLeft), time3d);
-    vec3 coord2 = vec3( rotateOrigin(rotated_fragCoord, right_rotated_center, timeRight), time3d);
+    vec2 coord0 = vec2( primary_fragCoord+primary_center);
+    vec2 coord1 = vec2( rotateOrigin(rotated_fragCoord, left_rotated_center, timeLeft));
+    vec2 coord2 = vec2( rotateOrigin(rotated_fragCoord, right_rotated_center, timeRight));
 
-    float n0 = snoise3d(coord0);
-    float n1 = snoise3d(coord1);
-    float n2 = snoise3d(coord2);
+    float n0 = snoise3d(vec3(coord0, 0.0));
+    float n1 = snoise3d(vec3(coord1, 0.0));
+    float n2 = snoise3d(vec3(coord2, 0.0));
 
     vec3 color;
 
     if (u_showComponents == 0) {
         float brighten = 1.5;
         float c = (n1+n2)/2.0;
-        float n = snoise3d(coord0 * c);
+        float n = snoise3d(vec3(coord0 * c, time3d));
 
-        float r = min(1.0, n * brighten);
-        float g = min(1.0, n * brighten);
-        float b = min(1.0, n * brighten);
+        vec2 uv = fragCoord.xy/iResolution.xy;
+        vec3 col = 0.5 + 0.5*cos(iTime+uv.xyx+vec3(0,2,4));
 
-        color = vec3(r, g, b);
+        color = mix(vec3(n, n, n), col, c);
     } else {
         color = vec3(n0, n1, n2);
     }
 
-    frag_color = vec4(color, 1.0);
+    fragColor = vec4(color, 1.0);
+}
+
+//
+// Shadertoy End
+//
+
+void main() {
+    mainImage(out_color, gl_FragCoord.xy);
 }
