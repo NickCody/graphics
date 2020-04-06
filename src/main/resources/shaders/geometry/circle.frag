@@ -30,13 +30,13 @@ float sigmoidToFalloff(float s) {
 // tolerance - thickness of circle line
 // sharpness - 1.0 blurry, 0.0001 sharp
 float test(vec2 coord, vec2 center, float radius, float thickness, float sharpness) {
-    float d = sqrt(pow(coord.x - center.x,2.0) + pow(coord.y - center.y,2.0));
-    float d1 = abs(d-radius);
+    float dist_to_center = sqrt(pow(coord.x - center.x,2.0) + pow(coord.y - center.y,2.0));
+    float delta = abs(dist_to_center-radius);
 
-    if (d1 < thickness)
+    if (delta < thickness)
         return 0.0;
     else
-        return sigmoidToFalloff(sigmoid((d1-thickness)*sharpness));
+        return sigmoidToFalloff(sigmoid((delta-thickness)*sharpness));
 }
 
 void mainImage(out vec4 out_color, vec2 fragCoord) {
