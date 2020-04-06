@@ -1,5 +1,5 @@
-.idea/
 *.iml
 target/
 hs_err_pid*
-!.idea/
+.idea/modules.xml
+gradle.xml

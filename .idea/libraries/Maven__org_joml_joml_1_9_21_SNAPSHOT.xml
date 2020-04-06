@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.joml:joml:1.9.21-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/joml/joml/1.9.21-SNAPSHOT/joml-1.9.21-20200217.223145-48.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/joml/joml/1.9.21-SNAPSHOT/joml-1.9.21-20200217.223145-48-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/joml/joml/1.9.21-SNAPSHOT/joml-1.9.21-20200217.223145-48-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

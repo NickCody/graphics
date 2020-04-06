@@ -84,12 +84,12 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     float timeLeft   = iTime * u_rot_left_timescale;
     float timeRight  = iTime * u_rot_right_timescale;
 
-    vec2 coord0 = vec2( primary_fragCoord+primary_center);
+    vec2 coord0 = vec2( rotateOrigin(primary_fragCoord, primary_center,time3d));
     vec2 coord1 = vec2( rotateOrigin(rotated_fragCoord, left_rotated_center, timeLeft));
     vec2 coord2 = vec2( rotateOrigin(rotated_fragCoord, right_rotated_center, timeRight));
 
     vec2 uv = iMouse.xy/iResolution.xy;
-    float n0 = snoise3d(vec3(coord0, time3d));
+    float n0 = iqnoise(coord0, uv.x, uv.y);
     float n1 = iqnoise(coord1, uv.x, uv.y);
     float n2 = iqnoise(coord2, uv.x, uv.y);
 
@@ -98,7 +98,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     if (u_showComponents == 0) {
         float brighten = 1.5;
         float c = (n1+n2)/2.0;
-        float n = iqnoise(coord0 * c, 1, 1);
+        float n = iqnoise(coord0 * c, 0, 1);
 
         vec3 col = 0.5 + 0.5*cos(iTime+coord0.xyx+vec3(0,2,4));
 
