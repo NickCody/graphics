@@ -7,10 +7,6 @@ uniform vec2 iMouse;
 out vec4 out_color;
 
 //
-// Shadertoy Start
-//
-
-//
 // coord - pixel to test
 // center - center of circle
 // radius - radius of circle
@@ -27,7 +23,7 @@ int test(vec2 coord, vec2 center, float radius, float tolerance) {
         return 1;
 }
 
-void mainImage(out vec4 out_color, vec2 fragCoord) {
+void main() {
     vec3 white = vec3(1.0, 1.0, 1.0);
     vec3 black = vec3(0.0, 0.0, 0.0);
 
@@ -44,13 +40,4 @@ void mainImage(out vec4 out_color, vec2 fragCoord) {
         vec3 col = 0.5 + 0.5*cos(iTime+uv.xyx+vec3(0,2,4));
         out_color = vec4(col,1.0);
     }
-}
-
-
-//
-// Shadertoy End
-//
-
-void main() {
-    mainImage(out_color, gl_FragCoord.xy);
 }

@@ -79,8 +79,8 @@ class ColorTriangle(override val appContext: AppContext) extends ScalaApp {
 
     // Uniform setup
     //
-    u_resolution = glGetUniformLocation(shader_prog, "u_resolution")
-    u_mouse = glGetUniformLocation(shader_prog, "u_mouse")
+    u_resolution = glGetUniformLocation(shader_prog, "iResolution")
+    u_mouse = glGetUniformLocation(shader_prog, "iMouse")
 
     glUseProgram(shader_prog)
 

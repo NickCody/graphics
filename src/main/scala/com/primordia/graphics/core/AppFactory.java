@@ -52,7 +52,10 @@ public class AppFactory {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_SAMPLES, actualMultisamples);
+
+        if (actualMultisamples > 1) {
+            glfwWindowHint(GLFW_SAMPLES, actualMultisamples);
+        }
 
         long window = 0;
         long mon = glfwGetPrimaryMonitor();

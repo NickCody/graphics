@@ -18,7 +18,8 @@ import org.lwjgl.opengl.GL15.{GL_ARRAY_BUFFER, GL_STATIC_DRAW, glBindBuffer, glB
 
 object RotatingSimplex {
   val fragmentShader: String = System.getProperty("fragmentShader", "shaders/perlin-noise/RotatingSimplex.frag" )
-  val multiSample: Int = System.getProperty("multiSample", "4" ).toInt
+  val multiSample: Int = System.getProperty("multiSample", "32" ).toInt
+  val fullScreen: Boolean = System.getProperty("multiSample", "true" ).matches("true|1")
 
   def main(args: Array[String]): Unit = {
 
@@ -26,8 +27,8 @@ object RotatingSimplex {
       .defaultWindowParams()
       .title("Rotating Simplex Noise")
       .backgroundColor(Color.Black)
-      .multiSamples(Int.MaxValue)
-      .fullScreen(false)
+      .multiSamples(multiSample)
+      .fullScreen(fullScreen)
       .width(1920)
       .height(1080)
 
@@ -117,8 +118,8 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
   var u_rot_left_timescale = 0
   var u_rot_right_timescale = 0
-  var rot_left_timescale: Float = 0.1f
-  var rot_right_timescale: Float = -0.1f
+  var rot_left_timescale: Float = 0.01f
+  var rot_right_timescale: Float = -0.01f
 
   var u_animated = 0
   var animated = true

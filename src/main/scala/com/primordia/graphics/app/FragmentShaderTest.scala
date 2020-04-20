@@ -15,8 +15,9 @@ import org.lwjgl.opengl.GL30._
 // A very basic OpenGL program to test various basic fragment shaders
 //
 object FragmentShaderTest {
+  val vertexShader: String = System.getProperty("vertexShader", "shaders/SimplePosition.vert" )
   val fragmentShader: String = System.getProperty("fragmentShader", "shaders/ColorPulse.frag" )
-  val multiSample: Int = System.getProperty("multiSample", "4" ).toInt
+  val multiSample: Int = System.getProperty("multiSample", "32" ).toInt
 
   def main(args: Array[String]): Unit = {
 
@@ -28,7 +29,7 @@ object FragmentShaderTest {
           .multiSamples(multiSample)
           .width(1200)
           .height(1200)
-          .fullScreen(true)
+          .fullScreen(false)
       ))
 
     app.run()
@@ -71,7 +72,7 @@ class FragmentShaderTest(override val appContext: AppContext) extends ScalaApp {
 
     // Shader Setup
     //
-    val vs = GLHelpers.generateVertexShader(GLHelpers.loadResource("shaders/SimplePosition.vert"))
+    val vs = GLHelpers.generateVertexShader(GLHelpers.loadResource(FragmentShaderTest.vertexShader))
     val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource(FragmentShaderTest.fragmentShader));
     shader_prog = GLHelpers.createShaderProgram(List(vs, fs).toArray)
     glUseProgram(shader_prog)
