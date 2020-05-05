@@ -18,6 +18,7 @@ object FragmentShaderTest {
   val vertexShader: String = System.getProperty("vertexShader", "shaders/SimplePosition.vert" )
   val fragmentShader: String = System.getProperty("fragmentShader", "shaders/ColorPulse.frag" )
   val multiSample: Int = System.getProperty("multiSample", "32" ).toInt
+  val fullScreen: Boolean = System.getProperty("fullScreen", "false" ).matches("true|1")
 
   def main(args: Array[String]): Unit = {
 
@@ -29,7 +30,7 @@ object FragmentShaderTest {
           .multiSamples(multiSample)
           .width(1200)
           .height(1200)
-          .fullScreen(false)
+          .fullScreen(fullScreen)
       ))
 
     app.run()
@@ -49,6 +50,8 @@ class FragmentShaderTest(override val appContext: AppContext) extends ScalaApp {
   var iTime = 0
   var iResolution = 0
   var iMouse = 0
+  var iFrame = 0
+  var frame = 0
   var vao = 0;
 
   override def onBeforeInit(): Unit = {
@@ -82,6 +85,7 @@ class FragmentShaderTest(override val appContext: AppContext) extends ScalaApp {
     iTime = glGetUniformLocation(shader_prog, "iTime")
     iResolution = glGetUniformLocation(shader_prog, "iResolution")
     iMouse = glGetUniformLocation(shader_prog, "iMouse")
+    iFrame = glGetUniformLocation(shader_prog, "iFrame")
   }
 
   override def onRender(): Unit = {
@@ -89,6 +93,8 @@ class FragmentShaderTest(override val appContext: AppContext) extends ScalaApp {
     glUniform1f(iTime, glfwGetTime().toFloat);
     glUniform2f(iResolution, windowWidth.toFloat, windowHeight.toFloat)
     glUniform2f(iMouse, mouseX.toFloat, windowHeight - mouseY.toFloat)
+    frame = frame + 1;
+    glUniform1i(iFrame, frame)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
