@@ -1,5 +1,5 @@
 *.iml
 target/
 hs_err_pid*
-.idea/modules.xml
 gradle.xml
+.idea/
