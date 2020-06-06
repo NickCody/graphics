@@ -3,14 +3,15 @@ package com.primordia.util;
 import org.lwjgl.BufferUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.math.Ordering;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.*;
+import java.nio.Buffer;
+import java.nio.FloatBuffer;
 import java.util.Scanner;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_FALSE;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;

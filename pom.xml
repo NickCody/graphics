@@ -14,14 +14,14 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>1.11</maven.compiler.source>
-		<maven.compiler.target>1.11</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
-		<lwjgl.version>3.2.4-SNAPSHOT</lwjgl.version>
-		<swt.version>4.6.1</swt.version>
-		<joml.version>1.9.21-SNAPSHOT</joml.version>
-		<scala.version>2.13.2</scala.version>
-		<scala-maven-plugin.version>4.3.1</scala-maven-plugin.version>
+		<lwjgl.version>3.2.3</lwjgl.version>
+		<swt.version>4.3</swt.version>
+		<joml.version>1.9.25</joml.version>
+		<scala.version>2.12.1</scala.version>
+		<scala-maven-plugin.version>4.4.0</scala-maven-plugin.version>
 	</properties>
 
 	<profiles>
@@ -361,12 +361,16 @@
 	</build>
 
 	<repositories>
+<!--		<repository>-->
+<!--			<id>oss.sonatype.org</id>-->
+<!--			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>-->
+<!--			<snapshots>-->
+<!--				<enabled>true</enabled>-->
+<!--			</snapshots>-->
+<!--		</repository>-->
 		<repository>
-			<id>oss.sonatype.org</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
+			<id>Sonatype Releases</id>
+			<url>https://oss.sonatype.org/content/repositories/releases/</url>
 		</repository>
 		<repository>
 			<id>swt-repo</id>
