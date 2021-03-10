@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL15.{GL_ARRAY_BUFFER, GL_STATIC_DRAW, glBindBuffer, glB
 
 object RotatingSimplex {
   val fragmentShader: String = System.getProperty("fragmentShader", "shaders/perlin-noise/RotatingSimplex.frag" )
-  val multiSample: Int = System.getProperty("multiSample", "32" ).toInt
+  val multiSample: Int = System.getProperty("multiSample", "4" ).toInt
   val fullScreen: Boolean = System.getProperty("fullScreen", "true" ).matches("true|1")
 
   def main(args: Array[String]): Unit = {
@@ -130,7 +130,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
   var last_rendered_timecode: Float =  glfwGetTime().toFloat
   var delta_timecode: Float = 0
-  var vao = 0;
+  var vao = 0
 
   val optionsWindow = new OptionsWindow(this,
     WindowParams.defaultWindowParams()
@@ -185,21 +185,21 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
     glBufferData(GL_ARRAY_BUFFER, fb_points.flip, GL_STATIC_DRAW)
     if (!glIsBuffer(vbo_points)) throw new RuntimeException("vbo_points is not a buffer!")
 
-    vao = glGenVertexArrays();
-    glBindVertexArray(vao);
+    vao = glGenVertexArrays()
+    glBindVertexArray(vao)
     if (!glIsVertexArray(vao)) {
-      throw new RuntimeException("vao is not a vertex array!");
+      throw new RuntimeException("vao is not a vertex array!")
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_points);
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0L);
-    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_points)
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0L)
+    glEnableVertexAttribArray(0)
 
 
     // Shader Setup
     //
     val vs = GLHelpers.generateVertexShader(GLHelpers.loadResource("shaders/SimplePosition.vert"))
-    val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource(RotatingSimplex.fragmentShader));
+    val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource(RotatingSimplex.fragmentShader))
     shader_prog = GLHelpers.createShaderProgram(List(vs, fs).toArray)
     glUseProgram(shader_prog)
 
@@ -215,7 +215,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
     u_rot_left_timescale = glGetUniformLocation(shader_prog, "u_rot_left_timescale")
     u_rot_right_timescale = glGetUniformLocation(shader_prog, "u_rot_right_timescale")
 
-    auxWindows.add(optionsWindow);
+    auxWindows.add(optionsWindow)
   }
 
   override def onRender(): Unit = {
@@ -224,7 +224,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
       last_rendered_timecode = glfwGetTime().toFloat - delta_timecode
     }
 
-    glUniform1f(iTime, last_rendered_timecode );
+    glUniform1f(iTime, last_rendered_timecode )
     glUniform2f(iResolution, windowWidth.toFloat, windowHeight.toFloat)
     glUniform2f(iMouse, mouseX.toFloat, windowHeight - mouseY.toFloat)
     glUniform1f(u_timescale, timescale)
