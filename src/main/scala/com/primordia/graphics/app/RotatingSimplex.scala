@@ -19,7 +19,7 @@ import org.lwjgl.opengl.GL15.{GL_ARRAY_BUFFER, GL_STATIC_DRAW, glBindBuffer, glB
 object RotatingSimplex {
   val fragmentShader: String = System.getProperty("fragmentShader", "shaders/perlin-noise/RotatingSimplex.frag" )
   val multiSample: Int = System.getProperty("multiSample", "4" ).toInt
-  val fullScreen: Boolean = System.getProperty("fullScreen", "true" ).matches("true|1")
+  val fullScreen: Boolean = System.getProperty("fullScreen", "false" ).matches("true|1")
 
   def main(args: Array[String]): Unit = {
 

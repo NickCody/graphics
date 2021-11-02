@@ -7,7 +7,7 @@ uniform int iFrame;
 
 out vec4 out_color;
 
-#define HW_PERFORMANCE 0
+#define HW_PERFORMANCE 1
 
 //
 // Shadertoy Start
