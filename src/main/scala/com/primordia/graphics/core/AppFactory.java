@@ -3,6 +3,7 @@ package com.primordia.graphics.core;
 import com.primordia.graphics.model.AppContext;
 import com.primordia.graphics.model.WindowParams;
 import com.primordia.util.WindowIconLoader;
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL11;
@@ -30,7 +31,7 @@ public class AppFactory {
     }
 
     public static AppContext createAppContext(WindowParams windowParams, Boolean debugMode) {
-        GLFWErrorCallback errCallback = null;
+        GLFWErrorCallback errCallback;
         Callback debugMessageCallback = null;
 
         log.info("Creating AppContext with windowParams: " + windowParams.toString());
@@ -52,14 +53,32 @@ public class AppFactory {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_AUTO_ICONIFY, 0);
 
         if (actualMultisamples > 1) {
             glfwWindowHint(GLFW_SAMPLES, actualMultisamples);
         }
 
-        long window = 0;
-        long mon = glfwGetPrimaryMonitor();
+        long window;
+        PointerBuffer mons = glfwGetMonitors();
+        if (mons == null) {
+            throw new RuntimeException("Could not glfwGetMonitors()");
+        }
+
+        long mon;
+
+        try {
+            if (windowParams.getMonitor() == 0)
+                mon = glfwGetPrimaryMonitor();
+            else
+                mon = mons.get(windowParams.getMonitor());
+        } catch (NullPointerException ex) {
+            mon = glfwGetPrimaryMonitor();
+        }
+
         GLFWVidMode vidmode = glfwGetVideoMode(mon);
+        if (vidmode == null)
+            throw new IllegalStateException("Failed to get glfwGetVideoMode for monitor " + mon);
 
         if (windowParams.getFullScreen()) {
             window = glfwCreateWindow(
@@ -87,7 +106,7 @@ public class AppFactory {
         }
 
         log.info("OpenGL version: " + GL11.glGetString(GL11.GL_VERSION));
-        log.info("GLCapabilities: " + caps.toString());
+        log.info("GLCapabilities: " + caps);
 
         return new AppContext(window, caps, windowParams, errCallback, debugMessageCallback);
     }
@@ -107,7 +126,7 @@ public class AppFactory {
         glfwMakeContextCurrent(window);
         GLCapabilities caps = createCapabilities();
 
-        int maxMultisamples = 1;
+        int maxMultisamples;
         try (MemoryStack frame = MemoryStack.stackPush()) {
             IntBuffer intBuf = frame.mallocInt(1);
             glGetIntegerv(GL_MAX_SAMPLES, intBuf);

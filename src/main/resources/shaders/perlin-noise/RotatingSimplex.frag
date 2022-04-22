@@ -161,8 +161,6 @@ float snoise3d(vec3 v){
     dot(p2,x2), dot(p3,x3) ) );
 }
 
-
-
 vec2 rotate(vec2 v, float a) {
     float s = sin(a);
     float c = cos(a);

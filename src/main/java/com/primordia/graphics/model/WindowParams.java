@@ -8,6 +8,7 @@ public class WindowParams {
     private String[] icons = new String[]{"Green32x32.png", "Green64x64.png"};
     private int multiSamples = 8;
     private boolean fullScreen = System.getProperty("fullscreen", "false").equals("true");
+    private int monitor = 0;
 
     public static WindowParams defaultWindowParams() {
         return new WindowParams();
@@ -19,13 +20,15 @@ public class WindowParams {
         this.title = title;
     }
 
-    public WindowParams(String title, Integer width, Integer height, Color backgroundColor, String[] icons, int multiSamples, boolean fullScreen) {
+    public WindowParams(String title, Integer width, Integer height, Color backgroundColor, String[] icons, int multiSamples, boolean fullScreen, Integer monitor) {
         this.title = title;
         this.width = width;
         this.height = height;
         this.backgroundColor = backgroundColor;
         this.icons = icons;
         this.multiSamples = multiSamples;
+        this.fullScreen = fullScreen;
+        this.monitor = monitor;
     }
 
     public String toString() {
@@ -35,7 +38,8 @@ public class WindowParams {
                 ", backgroundColor = " + backgroundColor +
                 ", icons = " + java.util.Arrays.toString(icons) +
                 ", multiSamples = " + multiSamples +
-                ", fullScreen = " + fullScreen;
+                ", fullScreen = " + fullScreen +
+                ", monitor = " + monitor;
     }
 
     //
@@ -98,6 +102,14 @@ public class WindowParams {
         this.fullScreen = fullScreen;
     }
 
+    public int getMonitor() {
+        return monitor;
+    }
+
+    public void setMonitor(int monitor) {
+        this.monitor = monitor;
+    }
+
     //
     // Builders
     //
@@ -131,6 +143,11 @@ public class WindowParams {
 
     public WindowParams fullScreen(boolean fullScreen) {
         this.fullScreen = fullScreen;
+        return this;
+    }
+
+    public WindowParams monitor(int monitor) {
+        this.monitor = monitor;
         return this;
     }
 

@@ -2,6 +2,7 @@ package com.primordia.graphics.core;
 
 import com.primordia.graphics.model.AppContext;
 import org.eclipse.swt.widgets.Display;
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -30,7 +31,7 @@ public abstract class App {
     protected Integer mouseY = 0;
     protected Double  currentSeconds = 0.0;
     protected Display display = new Display();
-    protected List<SwtWindow> auxWindows = new ArrayList<SwtWindow>();
+    protected List<SwtWindow> auxWindows = new ArrayList<>();
     protected abstract AppContext getAppContext();
 
     GLFWFramebufferSizeCallback sizeCallback = new GLFWFramebufferSizeCallback() {
@@ -59,7 +60,7 @@ public abstract class App {
     public void onBeforeInit() {}
     public void onAfterInit() {}
     public void onExit() {}
-    public void onProcessMessages() {};
+    public void onProcessMessages() {}
     public abstract void onRender();
     private void internalInit() {
 
@@ -115,11 +116,11 @@ public abstract class App {
             glfwMakeContextCurrent(getAppContext().getWindow());
             onRender();
 
-            for (SwtWindow swt : auxWindows) {
-                swt.onRender();
-            }
+//            for (SwtWindow swt : auxWindows) {
+//                swt.onRender();
+//            }
 
-            glfwMakeContextCurrent(getAppContext().getWindow());
+//            glfwMakeContextCurrent(getAppContext().getWindow());
 
             display.readAndDispatch();
 
@@ -155,8 +156,17 @@ public abstract class App {
     }
 
     public void makeFullScreen() {
-        GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        PointerBuffer mons = glfwGetMonitors();
+        if (mons == null) {
+            throw new RuntimeException("Could not get monitors");
+        }
 
+        long mon = mons.get(getAppContext().getWindowParams().getMonitor());
+
+        GLFWVidMode vidmode = glfwGetVideoMode(mon);
+        if ( vidmode == null) {
+            throw new RuntimeException("glfwGetVideoMode(" + mon + ") failed.");
+        }
         glfwSetWindowPos(
                 getAppContext().getWindow(),
                 (vidmode.width() - getAppContext().getWindowParams().getWidth()) / 2,

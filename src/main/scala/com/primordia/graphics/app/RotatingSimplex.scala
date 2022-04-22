@@ -19,7 +19,10 @@ import org.lwjgl.opengl.GL15.{GL_ARRAY_BUFFER, GL_STATIC_DRAW, glBindBuffer, glB
 object RotatingSimplex {
   val fragmentShader: String = System.getProperty("fragmentShader", "shaders/perlin-noise/RotatingSimplex.frag" )
   val multiSample: Int = System.getProperty("multiSample", "4" ).toInt
-  val fullScreen: Boolean = System.getProperty("fullScreen", "false" ).matches("true|1")
+  val fullScreen: Boolean = System.getProperty("fullScreen", "0" ).matches("1")
+  val monitor: Int =  System.getProperty("monitor", "0" ).toInt
+  val width: Int =  System.getProperty("width", "1920" ).toInt
+  val height: Int =  System.getProperty("height", "1080" ).toInt
 
   def main(args: Array[String]): Unit = {
 
@@ -29,11 +32,12 @@ object RotatingSimplex {
       .backgroundColor(Color.Black)
       .multiSamples(multiSample)
       .fullScreen(fullScreen)
-      .width(1920)
-      .height(1080)
+      .width(width)
+      .height(height)
+      .monitor(monitor)
 
     val app = new RotatingSimplex(
-      AppFactory.createAppContext(windowParams, true)
+      AppFactory.createAppContext(windowParams, false)
     )
 
     app.run()
@@ -70,26 +74,35 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
     new Text(swtCanvas, SWT.SINGLE).setText("Rotated Scale")
     val rotatedScale = new Scale(swtCanvas, SWT.PUSH)
-    val rotatedScaleMapped = new MappedScale(rotatedScale, 0.01f, .1f)
     rotatedScale.setBounds(clientArea.x, clientArea.y, clientArea.width, 64)
     rotatedScale.setMinimum(1)
-    rotatedScale.setMaximum(20)
-    rotatedScale.setPageIncrement(5)
-    rotatedScaleMapped.setScaledSelection(app.getRotatedScale)
+    rotatedScale.setMaximum(100)
+    rotatedScale.setPageIncrement(1)
+    rotatedScale.setSelection(1)
+
     rotatedScale.addSelectionListener(new SelectionListener {
       override def widgetSelected(e: SelectionEvent): Unit = {
-        app.setRotatedScale(rotatedScaleMapped.getScaledSelection)
+        app.setRotatedScale(.0001f * scala.math.pow(2, rotatedScale.getSelection/10.0f).toFloat)
       }
 
       override def widgetDefaultSelected(e: SelectionEvent): Unit = {}
     } )
 
-    new Text(swtCanvas, SWT.SINGLE).setText("Primary Scale")
+    new Text(swtCanvas, SWT.SINGLE).setText("Rotated Scale")
     val primaryScale = new Scale(swtCanvas, SWT.PUSH)
     primaryScale.setBounds(clientArea.x, clientArea.y, clientArea.width, 64)
     primaryScale.setMinimum(1)
     primaryScale.setMaximum(100)
-    primaryScale.setPageIncrement(5)
+    primaryScale.setPageIncrement(1)
+    primaryScale.setSelection(1)
+
+    primaryScale.addSelectionListener(new SelectionListener {
+      override def widgetSelected(e: SelectionEvent): Unit = {
+        app.setPrimaryScale(.0001f * scala.math.pow(2, primaryScale.getSelection/10.0f).toFloat)
+      }
+
+      override def widgetDefaultSelected(e: SelectionEvent): Unit = {}
+    } )
 
     swtCanvas.pack()
 
@@ -110,7 +123,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
   var u_rotated_scale = 0
   var u_primary_scale = 0
-  var rotated_scale: Float = 0.01f
+  var rotated_scale: Float = 0.005f
   var primary_scale: Float = 0.01f
 
   var u_timescale = 0
@@ -269,5 +282,9 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
   def setRotatedScale(newScale: Float): Unit = {
     rotated_scale = newScale
+  }
+
+  def setPrimaryScale(newScale: Float): Unit = {
+    primary_scale = newScale
   }
 }

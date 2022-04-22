@@ -19,6 +19,9 @@ object FragmentShaderTest {
   val fragmentShader: String = System.getProperty("fragmentShader", "shaders/ColorPulse.frag" )
   val multiSample: Int = System.getProperty("multiSample", "32" ).toInt
   val fullScreen: Boolean = System.getProperty("fullScreen", "false" ).matches("true|1")
+  val monitor: Int =  System.getProperty("monitor", "0" ).toInt
+  val width: Int =  System.getProperty("width", "1920" ).toInt
+  val height: Int =  System.getProperty("height", "1080" ).toInt
 
   def main(args: Array[String]): Unit = {
 
@@ -28,9 +31,10 @@ object FragmentShaderTest {
           .defaultWindowParams()
           .title(fragmentShader)
           .multiSamples(multiSample)
-          .width(1200)
-          .height(1200)
+          .width(width)
+          .height(height)
           .fullScreen(fullScreen)
+          .monitor(monitor)
       ))
 
     app.run()
@@ -52,7 +56,7 @@ class FragmentShaderTest(override val appContext: AppContext) extends ScalaApp {
   var iMouse = 0
   var iFrame = 0
   var frame = 0
-  var vao = 0;
+  var vao = 0
 
   override def onBeforeInit(): Unit = {
 
@@ -63,20 +67,20 @@ class FragmentShaderTest(override val appContext: AppContext) extends ScalaApp {
 
     if (!glIsBuffer(vbo_points)) throw new RuntimeException("vbo_points is not a buffer!")
 
-    vao = glGenVertexArrays();
-    glBindVertexArray(vao);
+    vao = glGenVertexArrays()
+    glBindVertexArray(vao)
 
-    if (!glIsVertexArray(vao)) throw new RuntimeException("vao is not a vertex array!");
+    if (!glIsVertexArray(vao)) throw new RuntimeException("vao is not a vertex array!")
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_points);
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0L);
-    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_points)
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0L)
+    glEnableVertexAttribArray(0)
 
 
     // Shader Setup
     //
     val vs = GLHelpers.generateVertexShader(GLHelpers.loadResource(FragmentShaderTest.vertexShader))
-    val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource(FragmentShaderTest.fragmentShader));
+    val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource(FragmentShaderTest.fragmentShader))
     shader_prog = GLHelpers.createShaderProgram(List(vs, fs).toArray)
     glUseProgram(shader_prog)
 
@@ -90,10 +94,10 @@ class FragmentShaderTest(override val appContext: AppContext) extends ScalaApp {
 
   override def onRender(): Unit = {
 
-    glUniform1f(iTime, glfwGetTime().toFloat);
+    glUniform1f(iTime, glfwGetTime().toFloat)
     glUniform2f(iResolution, windowWidth.toFloat, windowHeight.toFloat)
     glUniform2f(iMouse, mouseX.toFloat, windowHeight - mouseY.toFloat)
-    frame = frame + 1;
+    frame = frame + 1
     glUniform1i(iFrame, frame)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)

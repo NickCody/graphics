@@ -299,7 +299,7 @@
                                     <version>1.11</version>
                                 </requireJavaVersion>
                                 <requireOS>
-                                    <family>unix</family>
+                                    <family>windows</family>
                                 </requireOS>
                             </rules>
                         </configuration>
