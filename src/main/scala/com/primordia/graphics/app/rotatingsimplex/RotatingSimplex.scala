@@ -1,19 +1,20 @@
-package com.primordia.graphics.app
+package com.primordia.graphics.app.rotatingsimplex
 
+import com.primordia.graphics.app.rotatingsimplex.RotatingSimplex
 import com.primordia.graphics.core.{App, AppFactory, ScalaApp, SwtWindow}
 import com.primordia.graphics.model.{AppContext, Color, WindowParams}
-import org.lwjgl.glfw.GLFW._
-import org.lwjgl.opengl.GL11._
-import org.lwjgl.opengl.GL20._
-import org.lwjgl.opengl.GL30._
 import com.primordia.util.GLHelpers
 import org.eclipse.swt.events.{SelectionEvent, SelectionListener}
 import org.eclipse.swt.graphics.Rectangle
 import org.eclipse.swt.layout.GridLayout
 import org.eclipse.swt.widgets.{Composite, Control, Event, Listener, Scale}
 import org.lwjgl.BufferUtils
+import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWKeyCallback
-import org.lwjgl.opengl.GL15.{GL_ARRAY_BUFFER, GL_STATIC_DRAW, glBindBuffer, glBufferData, glGenBuffers, glIsBuffer}
+import org.lwjgl.opengl.GL11.*
+import org.lwjgl.opengl.GL15.*
+import org.lwjgl.opengl.GL20.*
+import org.lwjgl.opengl.GL30.*
 
 
 object RotatingSimplex {
@@ -123,7 +124,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
   var u_rotated_scale = 0
   var u_primary_scale = 0
-  var rotated_scale: Float = 0.005f
+  var rotated_scale: Float = 0.01f
   var primary_scale: Float = 0.01f
 
   var u_timescale = 0

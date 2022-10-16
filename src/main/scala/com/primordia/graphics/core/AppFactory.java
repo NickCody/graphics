@@ -72,7 +72,7 @@ public class AppFactory {
                 mon = glfwGetPrimaryMonitor();
             else
                 mon = mons.get(windowParams.getMonitor());
-        } catch (NullPointerException ex) {
+        } catch (NullPointerException | IndexOutOfBoundsException ex) {
             mon = glfwGetPrimaryMonitor();
         }
 

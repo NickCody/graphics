@@ -161,7 +161,13 @@ public abstract class App {
             throw new RuntimeException("Could not get monitors");
         }
 
-        long mon = mons.get(getAppContext().getWindowParams().getMonitor());
+        long mon;
+
+        try {
+            mon = mons.get(getAppContext().getWindowParams().getMonitor());
+        } catch (NullPointerException | IndexOutOfBoundsException ex) {
+            mon = glfwGetPrimaryMonitor();
+        }
 
         GLFWVidMode vidmode = glfwGetVideoMode(mon);
         if ( vidmode == null) {

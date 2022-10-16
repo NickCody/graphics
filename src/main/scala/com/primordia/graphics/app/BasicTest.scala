@@ -51,7 +51,7 @@ class BasicTest(override val appContext: AppContext) extends ScalaApp {
   var iMouse = 0
   var iFrame = 0
   var frame = 0
-  var vao = 0;
+  var vao = 0
 
   override def onBeforeInit(): Unit = {
 
@@ -75,7 +75,7 @@ class BasicTest(override val appContext: AppContext) extends ScalaApp {
     // Shader Setup
     //
     val vs = GLHelpers.generateVertexShader(GLHelpers.loadResource(FragmentShaderTest.vertexShader))
-    val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource(FragmentShaderTest.fragmentShader));
+    val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource(FragmentShaderTest.fragmentShader))
     shader_prog = GLHelpers.createShaderProgram(List(vs, fs).toArray)
     glUseProgram(shader_prog)
 
@@ -89,10 +89,10 @@ class BasicTest(override val appContext: AppContext) extends ScalaApp {
 
   override def onRender(): Unit = {
 
-    glUniform1f(iTime, glfwGetTime().toFloat);
+    glUniform1f(iTime, glfwGetTime().toFloat)
     glUniform2f(iResolution, windowWidth.toFloat, windowHeight.toFloat)
     glUniform2f(iMouse, mouseX.toFloat, windowHeight - mouseY.toFloat)
-    frame = frame + 1;
+    frame = frame + 1
     glUniform1i(iFrame, frame)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
