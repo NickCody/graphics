@@ -1,7 +1,7 @@
 #version 400
 
-uniform float u_time;
-uniform vec2 u_resolution;
+uniform float iTime;
+uniform vec2 iResolution;
 
 layout(origin_upper_left) in vec4 gl_FragCoord;
 
@@ -88,10 +88,19 @@ vec2 rotate(vec2 v, float a) {
     return m * v;
 }
 
+vec2 translate(vec2 v, float dx, float dy) {
+    return v + vec2(dx, dy);
+}
+
 void main() {
-    vec2 st = gl_FragCoord.xy/1000.0;
+    float SCALE=0.033;
+    float TIME_SCALE=0.2;
 
-    float n = snoise(st * 10);
+    vec2 st = gl_FragCoord.xy * SCALE;
+    vec2 st1 = translate(st, -iResolution.x/2  * SCALE, -iResolution.y/2 * SCALE);
+    vec2 sr = rotate(st1, iTime * TIME_SCALE);
+    vec2 st2 = translate(sr, iResolution.x/2  * SCALE, iResolution.y/2 * SCALE);
 
+    float n = snoise(st2);
     frag_color = vec4(vec3(n), 1.0);
 }

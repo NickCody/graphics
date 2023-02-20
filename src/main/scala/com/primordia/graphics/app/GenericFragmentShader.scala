@@ -13,15 +13,18 @@ import org.lwjgl.opengl.GL30._
 //
 // A very basic OpenGL program to test various basic fragment shaders
 //
-object BasicTest {
+object GenericFragmentShader {
   val vertexShader: String = System.getProperty("vertexShader", "shaders/SimplePosition.vert" )
-  val fragmentShader: String = System.getProperty("fragmentShader", "shaders/ColorPulse.frag" )
-  val multiSample: Int = System.getProperty("multiSample", "32" ).toInt
+  val fragmentShader: String = System.getProperty("fragmentShader")
+  val multiSample: Int = System.getProperty("multiSample", "8" ).toInt
   val fullScreen: Boolean = System.getProperty("fullScreen", "false" ).matches("true|1")
+  val monitor: Int = System.getProperty("monitor", "0").toInt
+  val width: Int = System.getProperty("width", "1920").toInt
+  val height: Int = System.getProperty("height", "1080").toInt
 
   def main(args: Array[String]): Unit = {
 
-    val app = new BasicTest(
+    val app = new GenericFragmentShader(
       AppFactory.createAppContext(
         WindowParams
           .defaultWindowParams()
@@ -30,20 +33,16 @@ object BasicTest {
           .width(1200)
           .height(1200)
           .fullScreen(fullScreen)
+          .width(width)
+          .height(height)
+          .monitor(monitor)
       ))
 
     app.run()
   }
 }
 
-class BasicTest(override val appContext: AppContext) extends ScalaApp {
-
-  private val points: Array[Float] = Array(
-    -1.0f,  1.0f,  0.0f,
-     1.0f,  1.0f,  0.0f,
-     1.0f, -1.0f,  0.0f,
-    -1.0f,  -1.0f, 0.0f
-    )
+class GenericFragmentShader(override val appContext: AppContext) extends ScalaApp {
 
   var shader_prog: Int = 0
   var iTime = 0
@@ -55,27 +54,26 @@ class BasicTest(override val appContext: AppContext) extends ScalaApp {
 
   override def onBeforeInit(): Unit = {
 
-    //val vbo_points = glGenBuffers
-    //glBindBuffer(GL_ARRAY_BUFFER, vbo_points)
-    //val fb_points = BufferUtils.createFloatBuffer(points.length).put(points)
-    //glBufferData(GL_ARRAY_BUFFER, fb_points.flip, GL_STATIC_DRAW)
+    val vbo_points = glGenBuffers
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_points)
+    val fb_points = BufferUtils.createFloatBuffer(screen_points.length).put(screen_points)
+    glBufferData(GL_ARRAY_BUFFER, fb_points.flip, GL_STATIC_DRAW)
 
-    //if (!glIsBuffer(vbo_points)) throw new RuntimeException("vbo_points is not a buffer!")
+    if (!glIsBuffer(vbo_points)) throw new RuntimeException("vbo_points is not a buffer!")
 
-    //vao = glGenVertexArrays()
-    //glBindVertexArray(vao)
+    vao = glGenVertexArrays()
+    glBindVertexArray(vao)
 
-    //if (!glIsVertexArray(vao)) throw new RuntimeException("vao is not a vertex array!");
+    if (!glIsVertexArray(vao)) throw new RuntimeException("vao is not a vertex array!")
 
-    //glBindBuffer(GL_ARRAY_BUFFER, vbo_points)
-    //glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0L)
-    //glEnableVertexAttribArray(0)
-
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_points)
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0L)
+    glEnableVertexAttribArray(0)
 
     // Shader Setup
     //
-    val vs = GLHelpers.generateVertexShader(GLHelpers.loadResource(FragmentShaderTest.vertexShader))
-    val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource(FragmentShaderTest.fragmentShader))
+    val vs = GLHelpers.generateVertexShader(GLHelpers.loadResource(GenericFragmentShader.vertexShader))
+    val fs = GLHelpers.generateFragmentShader(GLHelpers.loadResource(GenericFragmentShader.fragmentShader))
     shader_prog = GLHelpers.createShaderProgram(List(vs, fs).toArray)
     glUseProgram(shader_prog)
 

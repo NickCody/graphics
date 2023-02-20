@@ -67,14 +67,15 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
     import org.eclipse.swt.SWT
     import org.eclipse.swt.widgets.Text
-    val clientArea: Rectangle = shell.getClientArea
 
-    val gridLayout = new GridLayout()
+    private val clientArea: Rectangle = shell.getClientArea
+
+    private val gridLayout = new GridLayout()
     gridLayout.numColumns = 2
     swtCanvas.setLayout(gridLayout)
 
     new Text(swtCanvas, SWT.SINGLE).setText("Rotated Scale")
-    val rotatedScale = new Scale(swtCanvas, SWT.PUSH)
+    private val rotatedScale = new Scale(swtCanvas, SWT.PUSH)
     rotatedScale.setBounds(clientArea.x, clientArea.y, clientArea.width, 64)
     rotatedScale.setMinimum(1)
     rotatedScale.setMaximum(100)
@@ -90,7 +91,8 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
     } )
 
     new Text(swtCanvas, SWT.SINGLE).setText("Rotated Scale")
-    val primaryScale = new Scale(swtCanvas, SWT.PUSH)
+
+    private val primaryScale = new Scale(swtCanvas, SWT.PUSH)
     primaryScale.setBounds(clientArea.x, clientArea.y, clientArea.width, 64)
     primaryScale.setMinimum(1)
     primaryScale.setMaximum(100)
@@ -109,13 +111,6 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
 
   }
-
-  private val points: Array[Float] = Array(
-    -1.0f,  1.0f,  0.0f,
-     1.0f,  1.0f,  0.0f,
-     1.0f, -1.0f,  0.0f,
-    -1.0f,  -1.0f, 0.0f
-    )
 
   var shader_prog: Int = 0
   var iTime = 0
@@ -195,7 +190,7 @@ class RotatingSimplex(override val appContext: AppContext) extends ScalaApp {
 
     val vbo_points = glGenBuffers
     glBindBuffer(GL_ARRAY_BUFFER, vbo_points)
-    val fb_points = BufferUtils.createFloatBuffer(points.length).put(points)
+    val fb_points = BufferUtils.createFloatBuffer(screen_points.length).put(screen_points)
     glBufferData(GL_ARRAY_BUFFER, fb_points.flip, GL_STATIC_DRAW)
     if (!glIsBuffer(vbo_points)) throw new RuntimeException("vbo_points is not a buffer!")
 
