@@ -40,7 +40,7 @@
         <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
         <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
         <junit.version>4.13.2</junit.version>
-        <logback-classic.version>1.4.5</logback-classic.version>
+        <logback-classic.version>1.4.12</logback-classic.version>
     </properties>
 
     <dependencyManagement>
