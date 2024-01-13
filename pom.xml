@@ -14,8 +14,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>19</maven.compiler.source>
-        <maven.compiler.target>19</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
 
         <platform>windows</platform>
@@ -28,19 +28,18 @@
         <lwjgl.natives>natives-windows</lwjgl.natives>
         <swt.version>4.3</swt.version>
 
-        <scala.version>3.2.2</scala.version>
-        <scala-maven-plugin.version>4.5.4</scala-maven-plugin.version>
+        <scala.version>2.13.12</scala.version>
+        <scala-maven-plugin.version>4.8.1</scala-maven-plugin.version>
 
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-        <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
-        <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
-        <maven-install-plugin.version>3.0.0-M1</maven-install-plugin.version>
+        <maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
+        <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+        <maven-install-plugin.version>3.1.1</maven-install-plugin.version>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
         <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
         <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
         <junit.version>4.13.2</junit.version>
-        <logback-classic.version>1.4.5</logback-classic.version>
+        <logback-classic.version>1.4.14</logback-classic.version>
     </properties>
 
     <dependencyManagement>

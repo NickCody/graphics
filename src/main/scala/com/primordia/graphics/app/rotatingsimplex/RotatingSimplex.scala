@@ -1,21 +1,20 @@
 package com.primordia.graphics.app.rotatingsimplex
 
-import com.primordia.graphics.app.rotatingsimplex.RotatingSimplex
-import com.primordia.graphics.core.{App, AppFactory, ScalaApp, SwtWindow}
+import com.primordia.graphics.core.{AppFactory, ScalaApp, SwtWindow}
 import com.primordia.graphics.model.{AppContext, Color, WindowParams}
 import com.primordia.util.GLHelpers
 import org.eclipse.swt.events.{SelectionEvent, SelectionListener}
 import org.eclipse.swt.graphics.Rectangle
 import org.eclipse.swt.layout.GridLayout
-import org.eclipse.swt.widgets.{Composite, Control, Event, Listener, Scale}
+import org.eclipse.swt.widgets.Scale
 import org.lwjgl.BufferUtils
-import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.glfw.GLFW.{glfwGetTime, glfwSetKeyCallback, glfwSwapBuffers}
 import org.lwjgl.glfw.GLFWKeyCallback
-import org.lwjgl.opengl.GL11.*
-import org.lwjgl.opengl.GL15.*
-import org.lwjgl.opengl.GL20.*
-import org.lwjgl.opengl.GL30.*
-
+import org.lwjgl.glfw.GLFW._
+import org.lwjgl.opengl.GL11._
+import org.lwjgl.opengl.GL15._
+import org.lwjgl.opengl.GL20._
+import org.lwjgl.opengl.GL30._
 
 object RotatingSimplex {
   val fragmentShader: String = System.getProperty("fragmentShader", "shaders/perlin-noise/RotatingSimplex.frag" )
